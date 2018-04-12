@@ -1,0 +1,172 @@
+\documentclass[12pt,oneandhalf,chaparabic,ceng,ms,eng,oneside,pntc]{gsufbe}
+% for Computer Engineering use option ceng
+% for Industrial Engineeering use option ie
+% for Logistics and Finance Management use option lfm
+% for Mathematics use option math
+% for MSc use option ms
+% for PhD use option phd
+% Don't change other options due to instutional regulations. 
+% You can delete next line If your thesis does not have an appendix
+\usepackage{appendix}
+
+% Use your latex packages here
+%\usepackage{indentfirst}
+\usepackage{graphicx}
+\usepackage{amsmath}
+\usepackage{amsfonts}
+\usepackage{amssymb}
+\usepackage{enumitem}
+\usepackage{amsthm}
+\usepackage{subcaption}
+\usepackage{booktabs}
+\usepackage{array}
+\usepackage[round]{natbib}
+\usepackage{har2nat}
+\usepackage{algorithmic}
+\usepackage[ruled,noline]{algorithm2e}
+\usepackage{titlesec}
+\usepackage[section]{placeins}
+\usepackage{float}
+
+% End of Latex Packages
+%
+% Any personal Latex definition, decleration, etc.
+\makeatletter
+\let\old@includegraphics\includegraphics
+\renewcommand{\includegraphics}[2][,]{%
+  \setbox9=\hbox{\old@includegraphics[#1]{#2}}%
+  \ifdim\wd9>\textwidth
+    \old@includegraphics[#1,width=\textwidth]{#2}%
+  \else
+    \old@includegraphics[#1]{#2}%
+  \fi%
+}
+\makeatother
+
+% End of personal stuff
+%
+% Personal Information
+% ----------------------------
+%
+% Please check this part and fill in information about your thesis
+%
+% Name and Surname
+\author{Uğurcan Ergün}
+% Thesis Title English and Turkish
+\title{Evaluating Container Virtualization}
+\trtitle{Yönlendirilmiş Araştırma Dersi Raporu}
+% Department : English and Turkish
+%
+% The departments are pre-defined, you need not redeclare them. 
+% Date : You should indicate the month of your thesis defence in English.
+% Default is this month
+%
+\date{May 2018}
+%
+% Approval Page Details
+% --------------------------
+% For each command you can give the title as optional parameter enclosed in [ ]
+%For white covered thesis, please comment out approval page in cls file.
+%Committee members number:
+%-------------------
+%Single advisor/masters thesis: 2 members excluding advisor
+%Two advisors/master thesis: 3 members excluding both advisors
+%Single advisor/PhD Thesis: 4 members excluding advisor
+%Two advisors/PhD Thesis: 5 members excluding advisor
+%Please comment out extra member of committee. 
+%
+% prof : Prof. Dr.
+% assocprof : Assoc. Prof. Dr.
+% assistprof : Assist. Prof. Dr.
+% dr : Dr.
+%
+% Supervisor
+\supervisor[assistprof]{B. ATAY ÖZGÖVDE}
+\departmentofsupervisor{Computer Engineering Department, GSU}
+% co-Supervisor
+
+%\cosupervisor[assocprof]{JANE DOE}
+%\departmentofcosupervisor{Management, UCL}
+% Ask your supervisor if you are not sure
+\committeememberi[assistprof]{}
+\affiliationi{}
+\committeememberii[assistprof]{}
+\affiliationii{}
+%\committeememberiii[assistprof]{ATAY ÖZGÖVDE}
+%\affiliationiii{Computer Engineering Department, GSU}
+% Fourth committee member
+%\committeememberiv[assocprof]{MAN DOE}
+%\affiliationiv{Computer Engineering Department, MIT}
+% Fifth committee member
+%\committeememberv[assistprof]{WOMAN DOE}
+%\affiliationv{Computer Engineering Department, TOBB ETÜ}
+%
+% Keywords : English & Turkish & French, Comma seperated No more than 5 keywords
+\keywords{Virtualization}
+\motscles{}
+\anahtarklm{Sanallaştırma}
+%
+% Abstract in English
+%
+\abstract{}
+%
+% Abstract in French
+\resume{}
+% Turkish Abstract
+%
+\oz{}
+%
+% Acknowledgements
+\acknowledgments{}
+%
+% End of Personal and Introductory Information
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%5
+\setlength{\jot}{20pt}
+%%% !!! This two should be last lines before \begin{document}, do no move them !!!
+\usepackage[pdftex]{hyperref}
+\usepackage[all]{hypcap}
+\begin{document}
+\addtolength{\textheight}{1.5cm}
+% Preliminaries
+\newlength\myindent
+\setlength\myindent{6em}
+\newcommand\bindent{%
+  \begingroup
+  \setlength{\itemindent}{\myindent}
+  \addtolength{\algorithmicindent}{\myindent}
+}
+\newcommand\eindent{\endgroup}
+\begin{preliminaries}
+% If you are willing to use any custom stuff before Chapters, put it here
+% Such as List of Abbreviations
+% Check the abbreviations.tex for a template list of abbreviations
+%\input{abbreviations.tex}
+% End of Preliminaries
+\end{preliminaries}
+%
+% Latex content Goes Here
+%
+%
+\newtheorem{thm}{Definition}[chapter]
+\renewcommand{\thethm}{\arabic{chapter}.\arabic{thm}}
+\newtheorem{prp}{Proposition}[chapter]
+\renewcommand{\theprp}{\arabic{chapter}.\arabic{prp}}
+\newenvironment{prf}{\noindent{\bf Proof}}{$\hfill \Box$ \vspace{10pt}}
+
+\chapter{Introduction}
+\chapter{Literature Review}
+\chapter{Network Function Virtualization}
+\chapter{Container Virtualization}
+\chapter{Experimentation}
+\chapter{Conclusion}
+
+\appendix
+\thispagestyle{empty}
+%\chapter[]{Proof of Some Theorem}
+%\thispagestyle{empty}
+%This is appendix text.
+
+%\input{vita.tex}
+%\thispagestyle{empty}
+
+\end{document} 
