@@ -1,0 +1,20 @@
+Faaliyet raporu container kısmına eklenebilecekler.
+
+Container kısmına gelirken NIST Cloud tanımını kullanabilirsin.
+
+A component-based performance comparison of four hypervisors
+* 4 temel hypervisor var. Xen, KVM, vSphere, HyperV
+* AWS Xen kullanıyor, Google Compute + Openstack KVM
+* Standart VM'ler en büyük overhead'i disk ve network işlemlerinde yaşıyorlar.
+
+Container tarihi
+Chroot
+FreeBSD jails
+OpenVZ
+LXC
+Docker
+
+Kernel namespaces
+cgroups
+Linux virtual networking
+* Linux bridge, tun/tap, veth pairs
