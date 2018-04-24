@@ -158,16 +158,78 @@
 \chapter{Literature Review}
 
 \chapter{Network Function Virtualization}
-\section{Introduction}
+\section{Introduction} 
 \section{ETSI MANO}
 \subsection{Architecture}
 \subsection{Implementations}
 \section{Service Function Chaining}
-
 \chapter{Container Virtualization}
 \section{Introduction}
-\section{I may explain under the hood kernel features here}
+National Institute of Standards and Technology defines cloud computing as a model for enabling
+easy access to a pool of computing resources that requires minimal intervention from the service
+provider. With cloud services, any person or organization can buy computing resources from providers
+without the need of investing in computing infrastructure themselves. 
+
+One of the essential technologies for implementing cloud services is virtualization. In modern cloud
+environments the usually preferred method for virtualization is called hypervisor based virtualization.
+Xen and KVM can be called the two most common free and open source hypervisors. While Xen is used in
+biggest public cloud platform Amazon Web Services, KVM is used in Google Cloud Platform and Openstack.
+
+The main goal for the hypervisors is to isolate virtual machines in physical host to a degree that they
+are no different than separate computers in a network. Virtual machines run a seperate operating system
+called guest operating system and hypervisor mediates the system calls to the host operating system.
+This technique is very efficient at isolating virtual machines but it also introduces an overhead
+since there is an extra layer of abstraction. Previous studies show that while CPU and memory overhead
+is minimal, biggest overheads occur in I/O operations. There is also some operational overheads that
+comes from running an separate full-fledged guest OS. It also needs to be maintained and updated.
+
+Recently there is another method of virtualization gaining traction in both research and the industry.
+It's called operating system level virtualization or more commonly container virtualization.With
+container virtualization virtual machines or containers have their own process and resource space but
+they use host machines kernel and resources directly. Without the need of complete isolation and an
+unaware guest OS container virtualization can achieve faster start up times, less resource consumption
+and smaller images. But since all containers use the same kernel isolation between different containers
+is weaker.
+
+The earliest attempt for operating system level virtualization can be traced to the UNIX chmod command.
+It is introduced in UNIX version 7 at year of 1979. By that time it could only provide file system
+isolation. But FreeBSD jails is the first mechanism that can truly be called a container in a modern
+sense. It was developed by Poul-Henning Kamp at 1998 and introduced in FreeBSD version 4 at 2000.
+Jailed processed can't see other processes, can access only a specific part of their file systems and
+have their own IP addresses. At Linux side, OpenVZ project developed a specialized kernel for running
+containers at 2006. Contrary to jails, OpenVZ is more akin to a virtual machines. OpenVZ containers
+have their own user structure, subject to configurable resource limits and can be migrated to separate
+physical machines without the need of shutting down.
+
+Despite both the concept and the technologies that make it possible were around for some time.
+Containers are only recently started to see wide spread adoption. This can be explain with a couple
+reasons. While Linux became one of the major platforms in the server domain there wasn't any container
+technology available that can be run on an unmodified Linux kernel. Furthermore Linux kernel lacked
+some of the essential capabilities to implement a container system such as resource management for
+processes. Before cgroups was introduced in 2008 Linux kernel didn't have the capacity for controlling
+and limiting the resources of a process or group of processes. Using cgroups and earlier introduced
+kernel namespaces in the same year first native Linux
+container project LXC was announced. While it didn't see much adopted by itself. It formed the basis
+for the most of the modern container technologies.
 \section{Docker}
+Docker is a container virtualization technology that is developed in 2013 by a software company called
+dotCloud. Among the modern container technologies Docker is the most widely used one and it would also
+be fair to say Docker project's success is partially responsible for the recent adoption of container
+virtualization technology. This might be attributed to Docker's different approach on how to prepare 
+and use containers.
+
+Virtual machines are used to be considered as virtual equivalents of physical dedicated servers and for
+some time containers are also thought as faster and more lightweight virtual machines. But the main
+contribution of Docker is focusing into an application instead of a server. Docker provides tools for
+packaging an application and all of it’s dependencies together to run the application inside of a
+container. Furthermore Docker proposes that each component of an application should be run in a 
+different container thus encouraging developers to use a loosely coupled software architecture that is 
+also called micro service architecture. According to micro service architectures managing and updating
+individual components of applications are easier compared to managing a monolithic application which
+all of it’s components runs in same environments and problems in one component can affect the whole
+application.
+
+
 \section{Kubernetes}
 
 \chapter{If we have some future implementations}
