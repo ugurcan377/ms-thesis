@@ -176,7 +176,7 @@ Xen and KVM can be called the two most common free and open source hypervisors. 
 biggest public cloud platform Amazon Web Services, KVM is used in Google Cloud Platform and Openstack.
 
 The main goal for the hypervisors is to isolate virtual machines in physical host to a degree that they
-are no different than separate computers in a network. Virtual machines run a seperate operating system
+are no different than separate computers in a network. Virtual machines run a separate operating system
 called guest operating system and hypervisor mediates the system calls to the host operating system.
 This technique is very efficient at isolating virtual machines but it also introduces an overhead
 since there is an extra layer of abstraction. Previous studies show that while CPU and memory overhead
@@ -221,12 +221,12 @@ and use containers.
 Virtual machines are used to be considered as virtual equivalents of physical dedicated servers and for
 some time containers are also thought as faster and more lightweight virtual machines. But the main
 contribution of Docker is focusing into an application instead of a server. Docker provides tools for
-packaging an application and all of it’s dependencies together to run the application inside of a
+packaging an application and all of its dependencies together to run the application inside of a
 container. Furthermore Docker proposes that each component of an application should be run in a 
 different container thus encouraging developers to use a loosely coupled software architecture that is 
 also called micro service architecture. According to micro service architectures managing and updating
 individual components of applications are easier compared to managing a monolithic application which
-all of it’s components runs in same environments and problems in one component can affect the whole
+all of its components runs in same environments and problems in one component can affect the whole
 application.
 
 
@@ -236,6 +236,37 @@ application.
 
 \chapter{Experimentation}
 \section{Setup}
+This section will explain the test environments that all the experimentations will use. While this
+setup has many components, all the software components are selected from available free and open source
+tools.
+
+The hardware used in this setup is a desktop computer. It's specifications are in the following
+\begin{itemize}
+ \item 8 core Intel i7-920 processor
+ \item Asus P6T Motherboard
+ \item 20 GiB 1066 Mhz DDR3 memory
+ \item Ubuntu 16.04 64 bit operating system
+\end{itemize}
+
+One of most essential parts of this setup would be a cloud platform that can run and manage containers.
+We chose the Kubernetes container orchestration software as a cloud platform after considering it's
+features, widespread adoption and maturity. There is no standard way to setup a Kubernetes cluster.
+While minikube can be used for development and testing purposes. It's method of creating a single node
+cluster inside of a virtual machine would makes it unsuitable for mimicking actual clusters. Another
+tool for building clusters by the Kubernetes team is kubeadm. Although it's currently on beta, it
+allows easy installation among multiple nodes regardless of type. We selected kubeadm as the 
+installation tool for our work. Installing kubeadm inside of Docker containers instead of virtual
+machines we built a three machine Kubernetes cluster with one master and two nodes. This pattern is
+often called dind or Docker in Docker. Kubeadm also leaves the network setup to the administrator's
+choice via the CNI. Thus allowing us to experiment with different network configurations.
+
+For monitoring the cluster state and container performance, an external tool is needed. As a monitoring
+tool we chose Prometheus a modern pull based monitoring that is developed by the same non-profit that
+also develops Kubernetes. Prometheus can easily be installed using the operator model. It can also
+receive metrics from other applications via extentions called exporters. To use in the tests we also 
+prepared a Docker image with a modified version of Nginx web server to be able send usage metrics to
+Prometheus.
+
 \section{Experiment Design}
 \section{Results}
 
