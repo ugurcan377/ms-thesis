@@ -262,12 +262,79 @@ choice via the CNI. Thus allowing us to experiment with different network config
 
 For monitoring the cluster state and container performance, an external tool is needed. As a monitoring
 tool we chose Prometheus a modern pull based monitoring that is developed by the same non-profit that
-also develops Kubernetes. Prometheus can easily be installed using the operator model. It can also
-receive metrics from other applications via extentions called exporters. To use in the tests we also 
-prepared a Docker image with a modified version of Nginx web server to be able send usage metrics to
-Prometheus.
+also develops Kubernetes. Prometheus can be easily installed using the operator model. It can also
+receive metrics from other applications via extensions called exporters. To use in the tests we also 
+prepared a Docker image with a modified web server to be able send usage metrics to Prometheus. This
+docker image contains a Nginx web server version 1.12.2 compiled with nginx-vts module.
 
 \section{Experiment Design}
+Before we start with experimenting with more advanced applications, it would be preferable to see this
+setup's performance when a more typical application is used. We designed a preliminary experiment for
+measuring network performance on Kubernetes using several different network setups.
+
+As we mentioned before contrary to virtual machines, if they are not constrained containers have full
+access to host machines computing resources and in a typical cloud environment we can assume that
+containers will always run with constrained resources. Because of that will also constrain our
+containers' resources. Until otherwise stated each pod will be constrained to 1/10th of a CPU core.
+
+The test application will be a simple web server. It will be deployed to the cluster via Kubernetes
+deployments using our Docker image. Kubernetes deployments are ideal deployment tools for this case 
+because they can create and maintain a specified number of instances for an application and they also
+can easily be scaled horizontally. We will create 3 separate deployments and for varying number of
+instances in each deployment we will run series of tests simulating network traffic. For simulating
+network traffic a http load testing tool bombardier will be used. It's a command line tool written in
+Go programming language and it can save results in JSON format for easy further processing. All
+containers inside a deployment will be exposed through single endpoints using Kubernetes NodePort 
+services.
+
+Our methodology for running the tests will be the following. 
+\begin{enumerate}
+ \item First we will choose a network setup and a node count and then create a Kubernetes cluster.
+ \item For each step we will create a pre-determined amount of instances for each deployment.
+ \item For each deployment we will run the load test software to send various amount of requests from
+ various amount of concurrent connections
+\end{enumerate}
+
+Number of instances used in the tests and parameters used for the load testing tools can be found below.
+
+\begin{table}[h]
+\caption{Number of instances for each deployment}
+\centering
+\begin{tabular}{ccc}
+Deployment 1 & Deployment 2 & Deployment 3 \\
+\specialrule{2pt}{1pt}{1pt}
+1 & 1 & 1 \\
+5 & 5 & 1 \\
+10 & 1 & 1 \\
+12 & 12 & 1 \\
+25 & 1 & 1 \\
+25 & 25 & 1 \\
+37 & 37 & 1 \\
+50 & 1 & 1 \\
+50 & 50 & 1 \\
+75 & 1 & 1 \\
+100 & 1 & 1 \\
+\hline
+\end{tabular}
+\label{rn1}
+\end{table}
+
+\begin{table}[h]
+\caption{Web server load testing parameters}
+\centering
+\begin{tabular}{cc}
+Connections & Total Requests\\
+\specialrule{2pt}{1pt}{1pt}
+20 & 10000 \\
+40 & 30000 \\
+60 & 50000 \\
+80 & 80000 \\
+100 & 100000 \\
+\hline
+\end{tabular}
+\label{rn1}
+\end{table}
+
 \section{Results}
 
 \chapter{Conclusion}
