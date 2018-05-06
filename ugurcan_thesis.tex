@@ -211,6 +211,7 @@ and limiting the resources of a process or group of processes. Using cgroups and
 kernel namespaces in the same year first native Linux
 container project LXC was announced. While it didn't see much adopted by itself. It formed the basis
 for the most of the modern container technologies.
+
 \section{Docker}
 Docker is a container virtualization technology that is developed in 2013 by a software company called
 dotCloud. Among the modern container technologies Docker is the most widely used one and it would also
@@ -222,17 +223,76 @@ Virtual machines are used to be considered as virtual equivalents of physical de
 some time containers are also thought as faster and more lightweight virtual machines. But the main
 contribution of Docker is focusing into an application instead of a server. Docker provides tools for
 packaging an application and all of its dependencies together to run the application inside of a
-container. Furthermore Docker proposes that each component of an application should be run in a 
+container. This model of packaging and deployment of applications using containers also found out to be
+a effective solution for an important problem at software development and maintenance. Because 
+differences between development and production environments such as different operating systems, 
+different versions of libraries and applications etc. is a common source for software bugs. Since they
+are being used and  maintained by different people and there are no way any single person would be
+aware of all the differences. Packaging the application and dependencies with Docker and running it in
+containers prevents this problem. Because it guarantees the environment that runs in developer’s
+machine and the production machine will be the same.
+
+Furthermore Docker proposes that each component of an application should be run in a 
 different container thus encouraging developers to use a loosely coupled software architecture that is 
 also called micro service architecture. According to micro service architectures managing and updating
 individual components of applications are easier compared to managing a monolithic application which
 all of its components runs in same environments and problems in one component can affect the whole
 application.
 
+\subsection{Docker Images}
+As mentioned before packaging the applications and dependencies together is one of the core ideas
+behind Docker. This is achieved by using the Docker images. Contrary to virtual machines where user
+has to install a new operating system on a clean virtual disk or use pre-installed disk image. Docker 
+provides the tools to easily create new images from scratch or from existing images. Docker also
+provides a central registry called Docker Hub where official and community created images can be found.
+New images are created by using a template format called Dockerfiles.To create an image user has to
+choose a base image and then has to describe what changes has to be made on this base image with
+provided commands. An example Dockerfile can be found at the appendix. Then using the Docker build
+command will create the intended image.
+
+Docker images are declarative constructs. An existing Docker image can not be edited or changed. This
+way it's guaranteed to have the same environment every time an image is used. To make changes to an
+image a new image has to be created. Docker has a version control system for images and a new version
+of the image doesn't have to overwrite the old images. This way in case of errors and failures old
+versions can still be used. Since storing whole copies of all images would take too much disk space.
+Docker uses a different storage technologies for storing images.
+
+Docker images are stored using a storage model called union file systems to minimize storing duplicate
+data. Using this model images are consisted of several ordered layers. Each layer has it's own file
+system and if a file is present in multiple layers only the file on the top most layer is visible. When
+creating a new image Docker takes all the layers from the base image and adds new layer or layers
+according to the Dockerfile. If we make create a new version of a image only the changes are also 
+written to a new layer. Normally layers are read only file systems but since container that can not
+write data to their disks would be unusable a writable layer is added when a container is created. This
+layer would be deleted when the container is removed until it's saved as a version of the image.
+While Docker can use different union file systems, by default AUFS is used.
+
+\subsection{Architecture}
+Docker uses a rather simple server-client architecture for the creation and management of the
+containers. The main components can be summarized as the Docker engine, the component that manages
+images and containers, Docker client, the component that users and administrators can send their
+commands to Docker engine with and the Docker registry the component images that constitutes the core of
+the containers resides. The communication between these components are achieved via REST APIs.
+
+It's clear to see that the Docker engine is at the core of this architecture. It will be easier to
+understand how the Docker Engine currently works if it's broken down to three sub components. The
+container runtime is the component that runs the containers themselves. The container engine provides
+the extra services that a container will need such as networking, storage, security etc. And The Docker 
+services is the set of components that provides services that are crucial for Docker's internal
+operation such as the Docker API, image management, authentication etc.
+
+Docker's commitment to the above mentioned micro service architecture can also be seen in the evolution
+of the Docker engine as it matures over time. Initially it was just a monolithic daemon. While it's
+convenient to have a centralized system in the short run. In time the shortcomings of this model
+started to appear and components started to become independent from the daemon. At first a plug-in
+model developed to manage the aforementioned extra services. Then the container runtime was modified to
+be able to run in a stand alone way. While the first container runtime for Docker was the LXC. It was
+already replaced by a runtime called libcontainer which is developed by Docker themselves. The new
+runtime that enabled libcontainer to be used without the docker daemon is called runC and it's managed
+by a library called containerd. With this change docker daemon became a component that is only
+connecting the API, service plugins and the containerd.
 
 \section{Kubernetes}
-
-\chapter{If we have some future implementations}
 
 \chapter{Experimentation}
 \section{Setup}
