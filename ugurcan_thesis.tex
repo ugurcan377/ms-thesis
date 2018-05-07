@@ -163,6 +163,7 @@
 \subsection{Architecture}
 \subsection{Implementations}
 \section{Service Function Chaining}
+
 \chapter{Container Virtualization}
 \section{Introduction}
 National Institute of Standards and Technology defines cloud computing as a model for enabling
@@ -293,6 +294,105 @@ by a library called containerd. With this change docker daemon became a componen
 connecting the API, service plugins and the containerd.
 
 \section{Kubernetes}
+The one of most important topics about operating cloud environments is the question of scale. In a
+practical case it would be expected to run numerous amounts of containers in many hosts and since
+cloud systems has to run with minimum human intervention. The obvious problem would be coordination
+of the containers in a automated manner. The problem domain can be defined as container orchestration.
+For container orchestration the main issues would be how containers will be distributed among hosts,
+how they will communicate, what happens when the containers fail, what happens in case of on outage,
+how will applications scale etc.
+
+Kubernetes is a container orchestration software that is developed by Google in 2014. It's design is
+inspired by Google's internal container orchestration systems Borg and Omega. Kubernetes is a free and
+open source software and it's ownership is later transfered to a more neutral organization Cloud Native
+Computing Foundation that is run by Linux Foundation. Kubernetes is written in Go programming language.
+It can be installed into physical servers, local virtual machines or public cloud services. Although
+Docker now has it's own integrated container orchestration solution called Docker Swarm, Kubernetes
+stays as the most widely used container orchestration software.
+
+\subsection{Architecture}
+Kubernetes implements a typical master slave architecture. These are named as master nodes and worker
+nodes. Each of these nodes has to run several Kubernetes components according to their roles in the
+cluster. For master nodes the required components are API server, etcd, scheduler and
+controller manager, for worker nodes the required components are kubelet and proxy.
+
+API server is the component that serves the Kubernetes API. The entire control plane of Kubernetes is
+built on the API and components doesn't have any other way to communicate with each other. API server
+is designed to be stateless and all the necessary data is stored on etcd.
+Etcd is a distributed key value store that is developed by CoreOS. It serves as a central database for
+the Kubernetes cluster. Since etcd stores the whole cluster state, consistency and fault tolerance is
+critical. It uses a consensus algorithm called raft to keep track of all the changes in etcd nodes.
+Scheduler is responsible for assigning containers to appropriate worker nodes considering the resource
+requirements, hardware conditions and several other factors.
+Controller manager is a collection of software that watches the current cluster state and checks if it
+matches with the records in the API such as node availability, current endpoints etc.
+Kubelet is the main Kubernetes daemon in the worker nodes. Kubelet's main responsibilities are to 
+manage containers and check both node's and container's current status and report it to the API.
+Proxy is responsible from the networking in the worker nodes. It listens the API and configures the
+node network accordingly so that containers can communicate without any problems.
+
+Kubernetes used Docker as the main container runtime. To support different container runtimes kubelet
+has to be modified significantly. Since it would be quite difficult for each runtime vendor to make
+this modifications a common API is developed to easily integrate other runtimes into Kubernetes. This
+API is called the Container Runtime Interface (CRI). While this is a relatively new technology,
+introduced with Kubernetes version 1.5 there is some implementations using CRI such as CRI-O which
+tries make Kubernetes compatible with Open Container Initiative runtimes and Rktlet a CRI
+implementation of the CoreOS runtime rkt.
+
+\subsection{Workloads}
+For creating or accessing Kubernetes resources a developer first has to select an API client to work
+with. It can be the web interface, one of the programming language clients or the kubectl command line
+interface. Then they would need a definition of the resource or resources they want to create as an
+Kubernetes API object. These object definitions or specs can be in JSON or YAML format and it would be
+fair to liken them to orchestration templates. Kubernetes puts a special emphasis on associating the
+objects. Associating your objects with meta data and using this meta data in other objects or
+applications is one of the strong suits of Kubernetes specs.
+
+The main unit of operation in Kubernetes is called a Pod. It can be seen as an abstraction of a single
+application or a service. Pods are made from container or containers, IP address and if there is any
+storage resources. Multiple containers within a Pod shares the Pod IP address and can communicate via
+localhost. The namespaces and the IP address belongs to infrastructure container called, pause 
+container and all other containers created runs as it’s children. so that failures among any of the 
+pods containers don't affect each other and any of the containers can be safely restarted. It's 
+recommended to only put applications that needs to be on the same namespace into a Pod together. This
+includes the complimentary services such as logging, metric collection etc. Bundling application
+containers and complimentary containers into a single pod also called the side car pattern. Pods are
+considered temporary and disposable. They can’t heal themselves in case of failures and generally in
+need of other structures for management like ReplicaSets and Deployments. These and a few other
+constructs are called controllers.
+
+ReplicaSets are a controller construct that can run any number copies of a Pod at the same time. A 
+ReplicaSet will monitor the Pods and ensure that number of Pods designated in ReplicaSet definition are
+running at any given time. It will spawn new Pods if some of current ones fail etc. ReplicaSets can
+also be used for scaling. 
+
+Developments are higher level controllers that also uses ReplicaSets for their operations. Main feature
+of Deployments is to make updates to Pods easy and safe. They can progressively update the Pods they
+monitor. Meaning it will spawn new Pods with updated image and terminate the Pods with old images as
+the new ones becomes ready. In case of errors updates can be rollback to previous versions. Since
+Deployments can do anything that ReplicaSets do and more. They are usually recommended over ReplicaSets
+for general use.
+
+There are also other controllers like DaemonSets which ensure copies of a Pod runs in every Node and
+Jobs which are temporary Pods terminated after they completed their designated operation.
+
+Since it’s expected from Pods to be disposable. It would not be reliable to try use Pod IPs for using
+any service that a Pod provides. For example a front end shouldn’t have to track the ever changing IP
+addresses of Pods that hosts it’s back end. Services are abstractions that provides reliable access to
+Pods. The default behavior of services is to assign a virtual IP (called ClusterIP) inside a cluster
+then forward traffic to this virtual IP to the Pods defined. Inside a node kube-proxy is responsible
+from getting service definition from API and preparing forwarding rules generally using IP tables.
+Beside using ClusterIP’s services can also define a port in each node for access called NodePort and
+Services can also use load balancers if the infrastructure below supports it.
+IP addresses of Services are only accessible from inside the cluster. For inbound connections to reach
+any Service therefore any Pod there is a resource called Ingress. Ingresses are basically a set of rules
+that forwards any inbound connection to any Service according to its definition. This definitions can
+be IP addresses, domains and subdomains or paths to a domain. Besides creating an Ingress resource
+users also have to create an Ingress controller. Ingress controller is actually a standard Pod that is
+registered into controller list via the API. There are several alternatives for an Ingress controller,
+Kubernetes project itself also provides an nginx based controller in their Github repository.
+
+\subsection{Networking}
 
 \chapter{Experimentation}
 \section{Setup}
