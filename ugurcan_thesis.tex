@@ -108,7 +108,17 @@
 %
 % Abstract in English
 %
-\abstract{}
+\abstract{
+In modern computing it has become common practice to run software on virtual environments and commodity
+hardware rather than specialized devices. But most of the network appliances in use are still propriety
+hardware. There is a significant amount of work in the network function virtualization domain to
+actualize these network functions in a virtualized manner. In this work we evaluate if it’s feasible to
+use virtual network functions in a virtualization technology that is recently gaining traction called
+operating system level virtualization or container virtualization. We examined if the necessary
+technologies for virtual network function exists in container domain and ran experiments on prevalent
+container platform Kubernetes to see if these platforms can match the requirements for the network 
+functions.}
+
 %
 % Abstract in French
 \resume{}
@@ -392,7 +402,7 @@ users also have to create an Ingress controller. Ingress controller is actually 
 registered into controller list via the API. There are several alternatives for an Ingress controller,
 Kubernetes project itself also provides an nginx based controller in their Github repository.
 
-\subsection{Networking}
+%\subsection{Networking}
 
 \chapter{Experimentation}
 \section{Setup}
@@ -498,6 +508,36 @@ Connections & Total Requests\\
 \section{Results}
 
 \chapter{Conclusion}
+Virtualization is one of essential technologies behind modern computing infrastructure. In this work we
+tried to examine to feasibility of combining two active subdomains of virtualization field. Network
+function virtualization and container based virtualization.
+
+At first we examined current systems for network function virtualization and tried to determine what
+technologies are required to implement network functions, which architectures are preferred when
+building systems to run network functions etc. Then we examined current container technologies and
+tried to understand their capabilities, if there are alternatives or counterparts to technologies that
+are required by virtual network functions.
+
+We built a container testbed with Kubernetes for testing how containers perform under load and can they
+adhere to often strict requirements for network functions. Our preliminary results show that the cases
+that doesn't use specialized high speed networking software performed similarly regardless of which
+networking setup was used. Results were varied between different experiments. Our conclusion was as is
+standard container clusters can not be used for implementing virtual network functions.
+
+But fundamental technologies that can used be for implementing virtual network functions in
+container environments are present. Considering there is still no out of box solution exists these are
+still immature and hard to install and use. We believe there are promising developments achieve network
+function virtualization in containers. And in the future more practical solutions will be developed.
+
+\section{Limitations and Future Work}
+One of the main limitations of this work was the limited computing resources. Our testbeds was 
+built into a common desktop computer. Which had very few resources compared to a common cloud
+environment and this made it very hard to design a realistic system and limited the scale of our
+experiments significantly.
+
+For future work with a proof of concept MANO implementation for Kubernetes can be developed using high
+performance networking software and other fundamental technologies required for network function
+virtualization.
 
 \appendix
 \thispagestyle{empty}
