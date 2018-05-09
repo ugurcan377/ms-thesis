@@ -168,10 +168,86 @@ functions.}
 \chapter{Literature Review}
 
 \chapter{Network Function Virtualization}
-\section{Introduction} 
-\section{ETSI MANO}
+\section{Introduction}
+Computers networks are still complex and hard to manage. This is mostly due to proprietary and tightly
+coupled nature of the most network devices. Since these types network appliances rarely designed with
+interoperability in mind. They often significantly increase the system complexity. For simplifying
+network management and adapting to the flexible requirements of the current virtualized environments a
+new networking method is developed called the software defined networking or SDN.
+
+Software defined networking, pursues to reduce the complexity of traditional networks by implementing 
+the lessons learned in virtualization to the networks. The main idea behind software defined networks
+is the separation of data and control planes which are usually tightly coupled in proprietary vendor
+appliances. The data plane is moved out of the network devices and they are used as simple forwarding
+devices that only uses rules that are imposed from a central management software instead of making any
+decisions about the network logic. The central management softwares that replaces the control planes in
+the network devices are called SDN controllers or network operating systems. For interoperability all
+communication between network devices and controllers are handled with a common interface regardless of
+the device's vendor.
+
+Software defined networking is starting to establish itself as the standard way to manage contemporary
+networks. But there are lots of complementary or auxiliary network functions such as firewalls, CDNs,
+carrier grade NATs, broadband network gateways etc. which are still provided as proprietary,
+specialized middle-boxes. Usage of specialized hardware always significantly increases capital
+expenditures and operational expenditures for network operators. This is especially relevant for
+telecommunications companies since they have to build and maintain many central offices around
+the area they provide services. While data centers of cloud companies can use commodity hardware and
+virtualization they can significantly reduce CAPEX and OPEX. There is little to none commercial of the
+shelf alternatives exist for mobile network devices such as Home Location Register (HLC), Home
+Subscriber Server (HSC), RNC, NodeB etc. Therefore any effort to virtualize these kinds of services
+would benefit telecommunications companies greatly. Ideally telecommunications companies would want to
+approximate their central offices to ordinary data centers if there would be a way to run their core
+services on commodity hardware. This model later would be called Central Office Rearchitectured as a
+Datacenter or CORD.
+
+Network Function Virtualization is a new research domain to virtualize the aforementioned network
+functions which is mostly pioneered under the banner of European Telecommunications Standards
+Institute. European Telecommunications Standards Institute is a standards organization that is
+founded in 1988 at France and mainly works on information and communication technologies. While it's a
+organization for European Union it's membership are not exclusive to companies and organizations from
+European Union member countries and has members from countries all around the world like Canada, China,
+Korea, Japan, Taiwan, United States etc.
+
+Network function virtualization is first proposed at 'SDN and OpenFlow World Congress' in
+Germany 2012 and currently developed by Network Function Virtualization Industry Standards Group of
+ETSI. ETSI NFV ISG has several workgroups with different interests such as NFV IFV (Infrastructure),
+NFV MAN (Management and Orchestration), NFV SEC (Security) etc.
+
+While they are often thought together software defined networking and network function virtualization
+are independent technologies and they contribute different ideas to network research. But if these two
+technologies are used in a complementary way, computer networks can be utilized more effectively.
+
+\section{ETSI NFV}
+The reference model proposed by ETSI NFV industry standards group gained traction in both industry and
+research. While it's not a de-facto standard for network function virtualization, there are many
+technologies and implementations that are based on this model. As it can be seen in figure xyz ETSI 
+model depicts the architecture as core functional blocks and their interactions with each other. 
+The main contribution of the ETSI NFV model is the block called Management and Orchestration or shortly
+MANO. This block is meant to enable integration of virtual network functions into modern cloud
+infrastructures.
 \subsection{Architecture}
 \subsection{Implementations}
+\section{Openstack Tacker}
+In NFV MANO implementations Openstack is one of the most commonly used VIMs. To have a complete MANO
+solution Openstack started a NFVO-NFVM project called Tacker. It's a spin-off of a Neutron project
+called ServiceVM started in 2014 to provide a unified interface for life-cycles of different
+appliances. While not successful as a Neutron project it evolved to implementing MANO in Openstack.
+Since 2015 Tacker project exists as an NFV MANO solution in Openstack.
+
+Tacker has a modular architecture that allows using it use with various different kinds of
+existing Openstack services like Openstack orchestration service Heat and Openstack monitoring service
+Ceilometer. VNF definitions (VNFDs) are described as TOSCA templates and saved in a service catalog.
+Operators can also configure and monitor the VNFs by their requirements by writing custom management or
+monitoring drivers.
+
+Tacker uses TOSCA YAML templates for its virtual network function definitions. TOSCA or Topology and
+Orchestration Specification for Cloud Applications is a format for defining applications that are needed
+to run on a cloud architecture. The specification is developed by an non-profit standards organization
+called Organization for the Advancement of Structured Information Standards (OASIS).
+A TOSCA template defines not only application that user wants to deploy but also
+it's requirements and the infrastructure it will run on. The main method of achieving
+this feat is by defining relations between these units.
+
 \section{Service Function Chaining}
 
 \chapter{Container Virtualization}
