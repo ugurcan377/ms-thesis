@@ -225,9 +225,61 @@ model depicts the architecture as core functional blocks and their interactions 
 The main contribution of the ETSI NFV model is the block called Management and Orchestration or shortly
 MANO. This block is meant to enable integration of virtual network functions into modern cloud
 infrastructures.
+
 \subsection{Architecture}
-\subsection{Implementations}
-\section{Openstack Tacker}
+\subsubsection{Network Function Virtualization Infrastructure (NFVI)}
+Network function virtualization infrastructure block of the ETSI NFV model that provides the necessary
+environment for virtual network functions. It consists of three parts. The first is the physical hardware
+that will provide the essential resources like processing power, storage and networking etc. They are
+assumed to be commercial off the self hardware. The second is the virtualization layer that will enable
+virtual network functions to use underlying architecture. As long it supports the use required reference
+points ETSI model doesn't require any specific virtualization solution. The third one
+are the pooled virtual resources will then be exposed for the use of upper levels.
+
+\subsubsection{Virtualized Network Function (VNF)}
+A virtualized network function is a virtualization of the existing network functions that are often
+implemented as specialized hardware. VNFs are expected to function identically compared to their non 
+virtualized counterparts. It is not necessary for a single VNF to be implemented in a single virtual
+machine. Implementation details may depend for the nature of the network function.
+
+\subsubsection{Element Management System (EMS)}
+Element management system is a functional block that will handle the management tasks for one or
+multiple VNFs. This management tasks include fault management, accounting, configuration (could be 
+vendor specific configuration), security and performance evaluation. The EMS may or may not collaborate
+with the virtual network function manager.
+
+\subsubsection{Operations Support System / Business Support System (OSS/BSS)}
+Operations Support System/Business Support System block is reserved for the network
+operators. They can define any operation that are not explicitly described in the core
+ETSI architecture. It is expected to share data with other function blocks.
+
+\subsubsection{Virtualized infrastructure manager (VIM)}
+Virtualized infrastructure manager block is responsible from the management of the network function
+virtualization infrastructure. Mainly VIM has to orchestrate NFVI resources. For this VIM has to make
+an inventory of system resource, keep track of what resources available at any time, know how currently
+allocated resources are utilized, is there any apparent hardware failures etc.
+A NFV architecture can have multiple VIMs and there can be different VIMs for different resources in 
+the NFVI. Openstack is a usual practical choice as virtualized infrastructure manager for the majority
+of the ETSI NFV implementations.
+
+\subsubsection{VNF Manager (VNFM)}
+VNF Manager block is the software that manages the life cycles of the virtual network functions. Life
+cycle of a VNF includes instantiation (mostly from a template and template generally includes
+configuration information), modification, termination, monitoring, measuring performance metrics,
+disaster recovery etc. VNFM generally implements VNF life cycle as a set of general commands that can
+be applied almost any VNF regardless of type and each VNF in the system is assigned to a VNFM.
+Likewise in VIM there is no limitation of how many VNFMs can exist together.
+
+\subsubsection{NFV Orchestrator (NFVO)}
+NFV Orchestrator is responsible for both orchestrating NFVI resources over multiple VIMs and managing
+network services' life cycle. A network service is an abstraction for multiple virtual or physical
+network functions and any service chains or forwarding graphs that interconnects them. A network
+services' live-cycle is alike to a virtual network function and consists of instantiation (with
+coordination the VNFM), modification, termination, monitoring, measuring performance metrics, disaster
+recovery etc. Other duties of an includes keeping a catalog of existing network services and virtual
+network functions, on-boarding new services, managing VNFMs etc.
+
+\subsection{Implementation: Openstack Tacker}
 In NFV MANO implementations Openstack is one of the most commonly used VIMs. To have a complete MANO
 solution Openstack started a NFVO-NFVM project called Tacker. It's a spin-off of a Neutron project
 called ServiceVM started in 2014 to provide a unified interface for life-cycles of different
@@ -248,7 +300,7 @@ A TOSCA template defines not only application that user wants to deploy but also
 it's requirements and the infrastructure it will run on. The main method of achieving
 this feat is by defining relations between these units.
 
-\section{Service Function Chaining}
+%\section{Service Function Chaining}
 
 \chapter{Container Virtualization}
 \section{Introduction}
@@ -529,13 +581,13 @@ because they can create and maintain a specified number of instances for an appl
 can easily be scaled horizontally. We will create 3 separate deployments and for varying number of
 instances in each deployment we will run series of tests simulating network traffic. For simulating
 network traffic a http load testing tool bombardier will be used. It's a command line tool written in
-Go programming language and it can save results in JSON format for easy further processing. All
+Go programming language and it can save results in JSON format for easier further processing. All
 containers inside a deployment will be exposed through single endpoints using Kubernetes NodePort 
 services.
 
 Our methodology for running the tests will be the following. 
 \begin{enumerate}
- \item First we will choose a network setup and a node count and then create a Kubernetes cluster.
+ \item First we will choose a network setup and then create a Kubernetes cluster with 2 nodes.
  \item For each step we will create a pre-determined amount of instances for each deployment.
  \item For each deployment we will run the load test software to send various amount of requests from
  various amount of concurrent connections
@@ -582,6 +634,25 @@ Connections & Total Requests\\
 \end{table}
 
 \section{Results}
+
+\begin{figure}
+\centering
+\includegraphics[]{calico.png}
+\caption{Experimentation results with Calico networking setup}
+\label{rnp1}
+\end{figure}
+\begin{figure}
+\centering
+\includegraphics[]{flannel.png}
+\caption{Experimentation results with Flannel networking setup}
+\label{rnp1}
+\end{figure}
+\begin{figure}
+\centering
+\includegraphics[]{weave.png}
+\caption{Experimentation results with Weave networking setup}
+\label{rnp1}
+\end{figure}
 
 \chapter{Conclusion}
 Virtualization is one of essential technologies behind modern computing infrastructure. In this work we
