@@ -220,11 +220,18 @@ technologies are used in a complementary way, computer networks can be utilized 
 \section{ETSI NFV}
 The reference model proposed by ETSI NFV industry standards group gained traction in both industry and
 research. While it's not a de-facto standard for network function virtualization, there are many
-technologies and implementations that are based on this model. As it can be seen in figure xyz ETSI 
-model depicts the architecture as core functional blocks and their interactions with each other. 
+technologies and implementations that are based on this model. As it can be seen in Figure \ref{fig:mano}
+ETSI model depicts the architecture as core functional blocks and their interactions with each other. 
 The main contribution of the ETSI NFV model is the block called Management and Orchestration or shortly
 MANO. This block is meant to enable integration of virtual network functions into modern cloud
 infrastructures.
+
+\begin{figure}
+\centering
+\includegraphics[]{mano.png}
+\caption{ETSI NFV Architecture}
+\label{fig:mano}
+\end{figure}
 
 \subsection{Architecture}
 \subsubsection{Network Function Virtualization Infrastructure (NFVI)}
@@ -452,7 +459,15 @@ stays as the most widely used container orchestration software.
 Kubernetes implements a typical master slave architecture. These are named as master nodes and worker
 nodes. Each of these nodes has to run several Kubernetes components according to their roles in the
 cluster. For master nodes the required components are API server, etcd, scheduler and
-controller manager, for worker nodes the required components are kubelet and proxy.
+controller manager, for worker nodes the required components are kubelet and proxy. A representation
+of Kubernetes architecture can be seen at Figure \ref{fig:k8sarch}
+
+\begin{figure}
+\centering
+\includegraphics[]{k8s-arch.png}
+\caption{Kubernetes Architecture}
+\label{fig:k8sarch}
+\end{figure}
 
 API server is the component that serves the Kubernetes API. The entire control plane of Kubernetes is
 built on the API and components doesn't have any other way to communicate with each other. API server
@@ -596,6 +611,22 @@ Our methodology for running the tests will be the following.
 Number of instances used in the tests and parameters used for the load testing tools can be found below.
 
 \begin{table}[h]
+\caption{Web server load testing parameters}
+\centering
+\begin{tabular}{cc}
+Connections & Total Requests\\
+\specialrule{2pt}{1pt}{1pt}
+20 & 10000 \\
+40 & 30000 \\
+60 & 50000 \\
+80 & 80000 \\
+100 & 100000 \\
+\hline
+\end{tabular}
+\label{reqtable}
+\end{table}
+
+\begin{table}[h]
 \caption{Number of instances for each deployment}
 \centering
 \begin{tabular}{ccc}
@@ -614,44 +645,57 @@ Deployment 1 & Deployment 2 & Deployment 3 \\
 100 & 1 & 1 \\
 \hline
 \end{tabular}
-\label{rn1}
+\label{instable}
 \end{table}
 
-\begin{table}[h]
-\caption{Web server load testing parameters}
-\centering
-\begin{tabular}{cc}
-Connections & Total Requests\\
-\specialrule{2pt}{1pt}{1pt}
-20 & 10000 \\
-40 & 30000 \\
-60 & 50000 \\
-80 & 80000 \\
-100 & 100000 \\
-\hline
-\end{tabular}
-\label{rn1}
-\end{table}
+The main motivation for selecting such an instance distribution can be explained with a few reasons.
+First it will be desirable to learn how co-locating containers are affected if other containers sharing
+the same host starts to experience heavy load. Second if multiple different services experience heavy
+load how does this affect each other and other containers on the host. For this reasons we designed a
+scheme that always have a control application that has a static instance count and instance counts of 
+the other one or two application changes constantly.
 
 \section{Results}
+We executed the test set described above on three different Kubernetes networking plugins Calico,
+Flannel and Weave. These plugins are selected because they are general purpose networks using
+different architectures and we thought it would paint a accurate picture for Kubernetes networking
+space. 
+
+The experiment setup was run by automated scripts 10 times for each different cluster. The
+results were then plotted using the arithmetic mean of the data collected from 10 experiments.
+
+It can be seen for all cases even a ordinary desktop computer can run high number of container
+instances. Even over 100 instances latency increase is very low. This suggests even this computer is
+capable of running a higher number of containers. High latency is at the initial step is expected 
+because only one container instance with constrained resources trying to respond to requests. But when
+the instance count is increased latency improves linearly and upon reaching a point latency improvement
+is flattened. There is slight increase at the final step because of the load increase of the host.
+While the latency of each application increases greatly when both application experiences load this can
+only be observed on the step two and not other steps. We can infer this is only caused by the lower
+instance counts rather than any problems about co-location. Latency of the control application doesn't
+seem to affected from the other applications' load, this fulfills one of important requirements for
+network function virtualization.
+
+While all three network plugins had very similar results. BGP based network solution Calico performed
+marginally better compared to overlay based network solutions Flannel and Weave. 
 
 \begin{figure}
 \centering
 \includegraphics[]{calico.png}
-\caption{Experimentation results with Calico networking setup}
-\label{rnp1}
+\caption{Experimentation results for the cluster with Calico networking}
+\label{calico}
 \end{figure}
 \begin{figure}
 \centering
 \includegraphics[]{flannel.png}
-\caption{Experimentation results with Flannel networking setup}
-\label{rnp1}
+\caption{Experimentation results for the cluster with Flannel networking}
+\label{flannel}
 \end{figure}
 \begin{figure}
 \centering
 \includegraphics[]{weave.png}
-\caption{Experimentation results with Weave networking setup}
-\label{rnp1}
+\caption{Experimentation results for the cluster with Weave networking}
+\label{weave}
 \end{figure}
 
 \chapter{Conclusion}
