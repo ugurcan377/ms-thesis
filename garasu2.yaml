@@ -1,0 +1,17 @@
+          requests:
+            cpu: "10m"
+          limits:
+            cpu: "250m"
+      - name: vts-exporter
+        image: sophos/nginx-vts-exporter
+        ports:
+        - containerPort: 9913
+      volumes:
+      - name: dash-videos
+        hostPath:
+          path: /opt/dash-videos/garasu
+          type: Directory
+      - name: dash-index
+        hostPath:
+          path: /opt/dash-videos/garasu/garasu.html
+          type: File
