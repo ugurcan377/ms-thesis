@@ -27,6 +27,8 @@
 \usepackage{titlesec}
 \usepackage[section]{placeins}
 \usepackage{float}
+\usepackage{listings}
+
 
 % End of Latex Packages
 %
@@ -102,9 +104,9 @@
 %\affiliationv{Computer Engineering Department, TOBB ETÜ}
 %
 % Keywords : English & Turkish & French, Comma seperated No more than 5 keywords
-\keywords{}
+\keywords{Network Function Virtualization, Containers, Cloud Computing, Virtualization, Kubernetes}
 \motscles{}
-\anahtarklm{}
+\anahtarklm{Ağ İşlevi Sanallaştırma, Konteynırlar, Bulut Bilişim, Sanallaştırma, Kubernetes}
 %
 % Abstract in English
 %
@@ -124,10 +126,25 @@ functions.}
 \resume{}
 % Turkish Abstract
 %
-\oz{}
+\oz{
+Günümüzde yazılımları özelleşmiş donanımlar yerine standart donanımlarda sanallaştırma teknolojileri
+kullanarak çalıştırmak yaygın bir pratik haline gelmiştir. Ancak bilgisayar ağları altyapısının çoğu
+halen özelleşmiş ticari çözümler üzerinde çalışmaktadır. Ağ altyapısını sanallaştırmak üzerine 
+litatürde pek çok çalışma ağ işlevi sanallaştırma dalı altında bulunmaktadır. Biz bu çalışmada ağ
+işlevi sanallaştırma çözümlerin yakın zamanda yaygınlaşmaya başlayan farklı bir sanallaştırma
+teknolojisi olan işletim sistemi seviyesi sanallaştırma veya konteynır sanallaştırma kullanarak
+uygulanabiliriliğini değerlendirdik. Ağ işlevi sanallaştırma için gerekli teknolojileri ve bunların
+konteynır teknolojilerilerindeki karşılıklarını inceledik ve önde gelen konteynır platformlarından biri
+olan Kubernetes kullanarak deneyler yaptık.
+}
 %
 % Acknowledgements
-\acknowledgments{}
+\acknowledgments{First, I would like to thank my thesis advisor Atay ÖZGÖVDE for guiding me through the
+whole process. His knowledge and experience was invaluable. I am grateful that he treated me with utmost
+care and consideration. \newline \newline I also want to thank Professor Cem Ersoy from Boğaziçi
+University for letting me to use their Network Laboratory and also treating me as one of their students.
+\newline \newline Finally, I want thank my family and friends for their constant support and
+encouragements.}
 %
 % End of Personal and Introductory Information
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%5
@@ -150,7 +167,7 @@ functions.}
 % If you are willing to use any custom stuff before Chapters, put it here
 % Such as List of Abbreviations
 % Check the abbreviations.tex for a template list of abbreviations
-%\input{abbreviations.tex}
+\input{abbreviations.tex}
 % End of Preliminaries
 \end{preliminaries}
 %
@@ -164,6 +181,22 @@ functions.}
 \newenvironment{prf}{\noindent{\bf Proof}}{$\hfill \Box$ \vspace{10pt}}
 
 \chapter{Introduction}
+\section{Thesis Outline}
+This thesis will follow the structure that is described below.
+
+Chapter 2 examines the literature about the current state of the research that is made in this field. 
+
+Chapter 3 presents an introduction for the network function virtualization domain. The reference
+architecture, most of the works in the literature are based on and one of the implementations of this
+model will be explored.
+
+Chapter 4 presents the history and state of art of the container virtualization. Two prominent
+technologies Docker and Kubernetes will be explained in detail.
+
+Chapter 5 describes the experimentation phase. The experiment design and used methods will be explained
+alongside with the results of experiments.
+
+Chapter 6 presents the conclusion of this work and discusses the further research probabilities.
 
 \chapter{Literature Review}
 
@@ -305,7 +338,8 @@ to run on a cloud architecture. The specification is developed by an non-profit 
 called Organization for the Advancement of Structured Information Standards (OASIS).
 A TOSCA template defines not only application that user wants to deploy but also
 it's requirements and the infrastructure it will run on. The main method of achieving
-this feat is by defining relations between these units.
+this feat is by defining relations between these units. An example TOSCA template can be found at
+\ref{appendix:tosca}
 
 %\section{Service Function Chaining}
 
@@ -393,8 +427,8 @@ provides the tools to easily create new images from scratch or from existing ima
 provides a central registry called Docker Hub where official and community created images can be found.
 New images are created by using a template format called Dockerfiles.To create an image user has to
 choose a base image and then has to describe what changes has to be made on this base image with
-provided commands. An example Dockerfile can be found at the appendix. Then using the Docker build
-command will create the intended image.
+provided commands. An example Dockerfile can be found at the \ref{appendix:docker}. Then using the
+Docker build command will create the intended image.
 
 Docker images are declarative constructs. An existing Docker image can not be edited or changed. This
 way it's guaranteed to have the same environment every time an image is used. To make changes to an
@@ -437,6 +471,15 @@ already replaced by a runtime called libcontainer which is developed by Docker t
 runtime that enabled libcontainer to be used without the docker daemon is called runC and it's managed
 by a library called containerd. With this change docker daemon became a component that is only
 connecting the API, service plugins and the containerd.
+
+Current state of Docker architecture can be seen at the Figure \ref{fig:dockerarch}
+
+\begin{figure}
+\centering
+\includegraphics[]{docker-arch.png}
+\caption{Docker Architecture}
+\label{fig:dockerarch}
+\end{figure}
 
 \section{Kubernetes}
 The one of most important topics about operating cloud environments is the question of scale. In a
@@ -497,9 +540,10 @@ For creating or accessing Kubernetes resources a developer first has to select a
 with. It can be the web interface, one of the programming language clients or the kubectl command line
 interface. Then they would need a definition of the resource or resources they want to create as an
 Kubernetes API object. These object definitions or specs can be in JSON or YAML format and it would be
-fair to liken them to orchestration templates. Kubernetes puts a special emphasis on associating the
-objects. Associating your objects with meta data and using this meta data in other objects or
-applications is one of the strong suits of Kubernetes specs.
+fair to liken them to orchestration templates. An example Kubernetes object spec can be found in
+\ref{appendix:k8spec}. Kubernetes puts a special emphasis on associating the objects. Associating your
+objects with meta data and using this meta data in other objects or applications is one of the strong
+suits of Kubernetes specs.
 
 The main unit of operation in Kubernetes is called a Pod. It can be seen as an abstraction of a single
 application or a service. Pods are made from container or containers, IP address and if there is any
@@ -581,9 +625,8 @@ prepared a Docker image with a modified web server to be able send usage metrics
 docker image contains a Nginx web server version 1.12.2 compiled with nginx-vts module.
 
 \section{Experiment Design}
-Before we start with experimenting with more advanced applications, it would be preferable to see this
-setup's performance when a more typical application is used. We designed a preliminary experiment for
-measuring network performance on Kubernetes using several different network setups.
+We designed an experiment for measuring network performance on Kubernetes using several different
+network setups.
 
 As we mentioned before contrary to virtual machines, if they are not constrained containers have full
 access to host machines computing resources and in a typical cloud environment we can assume that
@@ -595,7 +638,7 @@ deployments using our Docker image. Kubernetes deployments are ideal deployment 
 because they can create and maintain a specified number of instances for an application and they also
 can easily be scaled horizontally. We will create 3 separate deployments and for varying number of
 instances in each deployment we will run series of tests simulating network traffic. For simulating
-network traffic a http load testing tool bombardier will be used. It's a command line tool written in
+network traffic a HTTP load testing tool bombardier will be used. It's a command line tool written in
 Go programming language and it can save results in JSON format for easier further processing. All
 containers inside a deployment will be exposed through single endpoints using Kubernetes NodePort 
 services.
@@ -731,12 +774,31 @@ performance networking software and other fundamental technologies required for 
 virtualization.
 
 \appendix
+\lstset{%
+   breaklines=true,
+}
 \thispagestyle{empty}
-%\chapter[]{Proof of Some Theorem}
-%\thispagestyle{empty}
-%This is appendix text.
+\chapter[]{Example TOSCA Template}
+\thispagestyle{empty}
+\label{appendix:tosca}
+\lstinputlisting[]{tosca.yaml}
+\newpage
+\lstinputlisting[]{tosca2.yaml}
 
-%\input{vita.tex}
-%\thispagestyle{empty}
+\chapter[]{Example Dockerfile}
+\thispagestyle{empty}
+\label{appendix:docker}
+\lstinputlisting[]{dockerfile}
+
+\chapter[]{Example Kubernetes Object Spec}
+\thispagestyle{empty}
+\label{appendix:k8spec}
+\lstinputlisting[]{garasu.yaml}
+\newpage
+\lstinputlisting[]{garasu2.yaml}
+
+
+\input{vita.tex}
+\thispagestyle{empty}
 
 \end{document} 
