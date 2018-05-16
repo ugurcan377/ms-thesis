@@ -137,19 +137,19 @@ Submitted in Partial Fulfillment \vskip 0.5cm
        of the Requirements\vskip 0.5cm for the Degree of
        }
 \def\@titlepartb{\textbf{\uppercase\expandafter{\@degree}}
-	\vskip 0.5cm
+	\vskip 0.4cm
 	in
-	\vskip 0.5cm
+	\vskip 0.4cm
 	\textbf{\MakeUppercase{\@department}}
-	\vskip 0.5cm
+	\vskip 0.4cm
 	in the
-	\vskip 0.5cm
+	\vskip 0.4cm
 	\textbf{INSTITUTE OF SCIENCE AND ENGINEERING} 
-	\vskip 0.5cm
+	\vskip 0.4cm
 	of
-	\vskip 0.5cm
+	\vskip 0.4cm
 	\textbf{GALATASARAY UNIVERSITY} 
-	\vskip 2cm       
+	\vskip 1.1cm       
          }
 \def\@approvallabel{Approval of the thesis:}
 \def\@approvaltext{submitted by {\bf \MakeUppercase{\@author}} in partial fulfillment of the
@@ -592,11 +592,11 @@ to\hsize{\hfil\box\@tempboxa\hfil}
 \def\maketitle{\begin{titlepage}\normalsize
 \let\footnotesize\small \let\footnoterule\relax \setcounter{page}{1}
 \null \nointerlineskip
- \begin{center} \vskip -0.7cm plus0pt
+ \begin{center} \vskip 0.30cm plus0pt
  \nointerlineskip
  \vbox{\oneandhalfspacing \textbf{\MakeUppercase{\@disptitle}} \\(\MakeUppercase{\@trtitle)}}
  \vbox{}
-\vskip 1.7cm plus0pt minus2mm \nointerlineskip
+\vskip 1.1cm plus0pt minus2mm \nointerlineskip
  \vbox{by\vskip 0.5cm \textbf{\expandafter{\MakeUppercase{\@author}}, \ifm@s B.S. \else M.S. \fi}}
 \vskip 1.85cm plus0pt minus1cm \nointerlineskip
  \vbox{\oneandhalfspacing \@titleparta}
@@ -976,8 +976,8 @@ LIST OF ALGORITHMS
 %\listofalgorithms
 \showabstract
 \endshowabstract
-\showresume
-\endshowresume
+%\showresume
+%\endshowresume
 \showoz
 \endshowoz
 \fi
