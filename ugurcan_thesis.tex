@@ -20,6 +20,7 @@
 \usepackage{subcaption}
 \usepackage{booktabs}
 \usepackage{array}
+\usepackage{babel}
 \usepackage[round]{natbib}
 \usepackage{har2nat}
 \usepackage{algorithmic}
@@ -55,8 +56,8 @@
 % Name and Surname
 \author{Uğurcan Ergün}
 % Thesis Title English and Turkish
-\title{Evaluating Feasibility of Container Virtualization for Network Function Virtualization}
-\trtitle{Ağ İşlevi Sanallaştırma için Konteynır Sanallaştırmanın Uygunluğunun İncelenmesi}
+\title{Evaluating Feasibility of Container Virtualization for Virtual Network Functions}
+\trtitle{Sanal Ağ İşlevleri için Konteynır Sanallaştırmanın Uygunluğunun İncelenmesi}
 % Department : English and Turkish
 %
 % The departments are pre-defined, you need not redeclare them. 
@@ -123,7 +124,7 @@ functions.}
 
 %
 % Abstract in French
-\resume{}
+%\resume{}
 % Turkish Abstract
 %
 \oz{
@@ -199,7 +200,7 @@ significantly improve mobile bandwidth and latency by integrating various new te
 
 One of these new technologies is called network function virtualization. This technologies aims to
 implement the benefits of standard virtualization for vendor specific network appliances that usually
-comprises the back bone of telecom operators.
+comprises the back bone of telecom operators \cite{abdelwahab_network_2016}.
 
 An intention that can be inferred from telecom operators and industry organizations while designing the
 5G networks is to approximate telecom infrastructure to cloud infrastructure. Companies that heavily
@@ -229,6 +230,31 @@ alongside with the results of experiments.
 Chapter 6 presents the conclusion of this work and discusses the further research probabilities.
 
 \chapter{Literature Review}
+In our examination of the literature, we found out that previous works are mostly focused on
+implementation of virtual network functions with traditional virtualization. Few works that implemented
+VNFs with operating system level virtualization were focused on different areas such as edge 
+computing.
+
+In \cite{chen_implementing_2017}, Chen et al. implemented a NFV system using Openstack and it's
+management and orchestration tool Tacker. They made several alterations to these software for better
+utilization when used with virtual network functions such as better placement of functions, implementing
+a custom agent for auto scaling etc. Their work can be considered as a good example for an NFV
+implementation. A similar implementation with Openstack and Tacker can be seen in \cite{tahir_master}.
+
+In \cite{haider_md_rezzakul_deployment_2017} Haider used TOSCA orchestration method with a container
+platform Kubernetes. While TOSCA is commonly used in network function virtualization, the focus of this
+work is cloud orchestration not NFV. But it shows TOSCA orchestration can be used with containers.
+
+In \cite{imagane_performance_2018} Imagane et al. designed a system using service chaining, one of the
+important features of network function virtualization for implementing a multimedia service in an edge
+cluster. While this work may not be seen directly relevant to NFV, it can be considered as an
+implementation of a different use case.
+
+In \cite{cziva_container-based_2015} Cziva et al. used software defined networking with containers for
+implementing virtual network functions. They developed a simple network function virtualization platform
+with using OpenFlow, OpenDayLight and Docker. They also later expanded their work for cloud environments
+in \cite{cziva_gnfc_2015} and edge computing in \cite{cziva_container_2017}. Their work can be 
+considered as a solid proof of concept for using containers with network function virtualization.
 
 \chapter{Network Function Virtualization}
 \section{Introduction}
@@ -236,7 +262,8 @@ Computers networks are still complex and hard to manage. This is mostly due to p
 coupled nature of the most network devices. Since these types network appliances rarely designed with
 interoperability in mind. They often significantly increase the system complexity. For simplifying
 network management and adapting to the flexible requirements of the current virtualized environments a
-new networking method is developed called the software defined networking or SDN.
+new networking method is developed called the software defined networking or SDN
+\cite{chayapathi_network_2016}.
 
 Software defined networking, pursues to reduce the complexity of traditional networks by implementing 
 the lessons learned in virtualization to the networks. The main idea behind software defined networks
@@ -246,7 +273,7 @@ devices that only uses rules that are imposed from a central management software
 decisions about the network logic. The central management softwares that replaces the control planes in
 the network devices are called SDN controllers or network operating systems. For interoperability all
 communication between network devices and controllers are handled with a common interface regardless of
-the device's vendor.
+the device's vendor \cite{li_software_defined_2015}.
 
 Software defined networking is starting to establish itself as the standard way to manage contemporary
 networks. But there are lots of complementary or auxiliary network functions such as firewalls, CDNs,
@@ -257,15 +284,18 @@ telecommunications companies since they have to build and maintain many central 
 the area they provide services. While data centers of cloud companies can use commodity hardware and
 virtualization they can significantly reduce CAPEX and OPEX. There is little to none commercial of the
 shelf alternatives exist for mobile network devices such as Home Location Register (HLC), Home
-Subscriber Server (HSC), RNC, NodeB etc. Therefore any effort to virtualize these kinds of services
-would benefit telecommunications companies greatly. Ideally telecommunications companies would want to
+Subscriber Server (HSC), RNC, NodeB etc. \cite{khalid_standardized_2016} Therefore any effort to 
+virtualize these kinds of services
+would benefit telecommunications companies greatly. Ideally telecommunications
+companies would want to
 approximate their central offices to ordinary data centers if there would be a way to run their core
 services on commodity hardware. This model later would be called Central Office Rearchitectured as a
 Datacenter or CORD.
 
 Network Function Virtualization is a new research domain to virtualize the aforementioned network
 functions which is mostly pioneered under the banner of European Telecommunications Standards
-Institute. European Telecommunications Standards Institute is a standards organization that is
+Institute. European Telecommunications Standards Institute \cite{etsi} is a standards organization
+that is
 founded in 1988 at France and mainly works on information and communication technologies. While it's a
 organization for European Union it's membership are not exclusive to companies and organizations from
 European Union member countries and has members from countries all around the world like Canada, China,
@@ -274,19 +304,22 @@ Korea, Japan, Taiwan, United States etc.
 Network function virtualization is first proposed at 'SDN and OpenFlow World Congress' in
 Germany 2012 and currently developed by Network Function Virtualization Industry Standards Group of
 ETSI. ETSI NFV ISG has several workgroups with different interests such as NFV IFV (Infrastructure),
-NFV MAN (Management and Orchestration), NFV SEC (Security) etc.
+NFV MAN (Management and Orchestration), NFV SEC (Security) etc. \cite{ntt_nfv}
 
 While they are often thought together software defined networking and network function virtualization
 are independent technologies and they contribute different ideas to network research. But if these two
-technologies are used in a complementary way, computer networks can be utilized more effectively.
+technologies are used in a complementary way, computer networks can be utilized more effectively
+\cite{gray_network_2016}.
 
 \section{ETSI NFV}
-The reference model proposed by ETSI NFV industry standards group gained traction in both industry and
+The reference model \cite{etsi_nfv} proposed by ETSI NFV industry standards group gained traction
+in both industry and
 research. While it's not a de-facto standard for network function virtualization, there are many
 technologies and implementations that are based on this model. As it can be seen in Figure \ref{fig:mano}
 ETSI model depicts the architecture as core functional blocks and their interactions with each other. 
 The main contribution of the ETSI NFV model is the block called Management and Orchestration or shortly
-MANO. This block is meant to enable integration of virtual network functions into modern cloud
+MANO \cite{etsi_nfvman}. This block is meant to enable integration of virtual network functions 
+into modern cloud
 infrastructures.
 
 \begin{figure}
@@ -347,14 +380,15 @@ network functions and any service chains or forwarding graphs that interconnects
 services' live-cycle is alike to a virtual network function and consists of instantiation (with
 coordination the VNFM), modification, termination, monitoring, measuring performance metrics, disaster
 recovery etc. Other duties of an includes keeping a catalog of existing network services and virtual
-network functions, on-boarding new services, managing VNFMs etc.
+network functions, on-boarding new services, managing VNFMs etc \cite{gonzalez_dependability_2018}.
 
 \subsection{Implementation: Openstack Tacker}
-In NFV MANO implementations Openstack is one of the most commonly used VIMs. To have a complete MANO
+In NFV MANO implementations Openstack \cite{openstack} is one of the most commonly used VIMs. To have
+a complete MANO
 solution Openstack started a NFVO-NFVM project called Tacker. It's a spin-off of a Neutron project
 called ServiceVM started in 2014 to provide a unified interface for life-cycles of different
 appliances. While not successful as a Neutron project it evolved to implementing MANO in Openstack.
-Since 2015 Tacker project exists as an NFV MANO solution in Openstack.
+Since 2015 Tacker project exists as an NFV MANO solution in Openstack \cite{tacker}.
 
 Tacker has a modular architecture that allows using it use with various different kinds of
 existing Openstack services like Openstack orchestration service Heat and Openstack monitoring service
@@ -364,8 +398,8 @@ monitoring drivers.
 
 Tacker uses TOSCA YAML templates for its virtual network function definitions. TOSCA or Topology and
 Orchestration Specification for Cloud Applications is a format for defining applications that are needed
-to run on a cloud architecture. The specification is developed by an non-profit standards organization
-called Organization for the Advancement of Structured Information Standards (OASIS).
+to run on a cloud architecture \cite{oasis_tosca}. The specification is developed by an non-profit standards organization
+called Organization for the Advancement of Structured Information Standards (OASIS) \cite{oasis}.
 A TOSCA template defines not only application that user wants to deploy but also
 it's requirements and the infrastructure it will run on. The main method of achieving
 this feat is by defining relations between these units. An example TOSCA template can be found at
@@ -390,7 +424,8 @@ are no different than separate computers in a network. Virtual machines run a se
 called guest operating system and hypervisor mediates the system calls to the host operating system.
 This technique is very efficient at isolating virtual machines but it also introduces an overhead
 since there is an extra layer of abstraction. Previous studies show that while CPU and memory overhead
-is minimal, biggest overheads occur in I/O operations. There is also some operational overheads that
+is minimal, biggest overheads occur in I/O operations. \cite{hwang_component_based_2013} There is also
+some operational overheads that
 comes from running an separate full-fledged guest OS. It also needs to be maintained and updated.
 
 Recently there is another method of virtualization gaining traction in both research and the industry.
@@ -398,18 +433,20 @@ It's called operating system level virtualization or more commonly container vir
 container virtualization virtual machines or containers have their own process and resource space but
 they use host machines kernel and resources directly. Without the need of complete isolation and an
 unaware guest OS container virtualization can achieve faster start up times, less resource consumption
-and smaller images. But since all containers use the same kernel isolation between different containers
-is weaker.
+and smaller images \cite{joy_performance_2015}. But since all containers use the same kernel isolation
+between different containers is weaker.
 
 The earliest attempt for operating system level virtualization can be traced to the UNIX chmod command.
 It is introduced in UNIX version 7 at year of 1979. By that time it could only provide file system
 isolation. But FreeBSD jails is the first mechanism that can truly be called a container in a modern
 sense. It was developed by Poul-Henning Kamp at 1998 and introduced in FreeBSD version 4 at 2000.
+\cite{kamp_jails_2000}
 Jailed processed can't see other processes, can access only a specific part of their file systems and
 have their own IP addresses. At Linux side, OpenVZ project developed a specialized kernel for running
-containers at 2006. Contrary to jails, OpenVZ is more akin to a virtual machines. OpenVZ containers
+containers at 2006 \cite{kolyshkin_virtualization_2006}. Contrary to jails, OpenVZ is more akin to a
+virtual machines. OpenVZ containers
 have their own user structure, subject to configurable resource limits and can be migrated to separate
-physical machines without the need of shutting down.
+physical machines without the need of shutting down. \cite{bernstein_containers_2014}
 
 Despite both the concept and the technologies that make it possible were around for some time.
 Containers are only recently started to see wide spread adoption. This can be explain with a couple
@@ -419,18 +456,21 @@ some of the essential capabilities to implement a container system such as resou
 processes. Before cgroups was introduced in 2008 Linux kernel didn't have the capacity for controlling
 and limiting the resources of a process or group of processes. Using cgroups and earlier introduced
 kernel namespaces in the same year first native Linux
-container project LXC was announced. While it didn't see much adopted by itself. It formed the basis
-for the most of the modern container technologies.
+container project LXC \cite{lxc} was announced. While it didn't see much adopted by itself. It formed
+the basis
+for the most of the modern container technologies. \cite{singh_containers_2016}
 
 \section{Docker}
-Docker is a container virtualization technology that is developed in 2013 by a software company called
+Docker is a container virtualization technology \cite{docker} that is developed in 2013 by a software
+company called
 dotCloud. Among the modern container technologies Docker is the most widely used one and it would also
 be fair to say Docker project's success is partially responsible for the recent adoption of container
 virtualization technology. This might be attributed to Docker's different approach on how to prepare 
 and use containers.
 
 Virtual machines are used to be considered as virtual equivalents of physical dedicated servers and for
-some time containers are also thought as faster and more lightweight virtual machines. But the main
+some time containers are also thought as faster and more lightweight virtual machines
+\cite{adufu_is_2015}. But the main
 contribution of Docker is focusing into an application instead of a server. Docker provides tools for
 packaging an application and all of its dependencies together to run the application inside of a
 container. This model of packaging and deployment of applications using containers also found out to be
@@ -440,7 +480,7 @@ different versions of libraries and applications etc. is a common source for sof
 are being used and  maintained by different people and there are no way any single person would be
 aware of all the differences. Packaging the application and dependencies with Docker and running it in
 containers prevents this problem. Because it guarantees the environment that runs in developer’s
-machine and the production machine will be the same.
+machine and the production machine will be the same \cite{boettiger_introduction_2015}.
 
 Furthermore Docker proposes that each component of an application should be run in a 
 different container thus encouraging developers to use a loosely coupled software architecture that is 
@@ -482,7 +522,9 @@ Docker uses a rather simple server-client architecture for the creation and mana
 containers. The main components can be summarized as the Docker engine, the component that manages
 images and containers, Docker client, the component that users and administrators can send their
 commands to Docker engine with and the Docker registry the component images that constitutes the core of
-the containers resides. The communication between these components are achieved via REST APIs.
+the containers resides. Docker provides an central registry with official and community images free for
+use. This central registry is called the Docker Hub \cite{docker_hub}
+.The communication between these components are achieved via REST APIs.
 
 It's clear to see that the Docker engine is at the core of this architecture. It will be easier to
 understand how the Docker Engine currently works if it's broken down to three sub components. The
@@ -520,13 +562,15 @@ For container orchestration the main issues would be how containers will be dist
 how they will communicate, what happens when the containers fail, what happens in case of on outage,
 how will applications scale etc.
 
-Kubernetes is a container orchestration software that is developed by Google in 2014. It's design is
-inspired by Google's internal container orchestration systems Borg and Omega. Kubernetes is a free and
-open source software and it's ownership is later transfered to a more neutral organization Cloud Native
-Computing Foundation that is run by Linux Foundation. Kubernetes is written in Go programming language.
+Kubernetes is a container orchestration software that is developed by Google in 2014 \cite{Kubernetes}.
+It's design is
+inspired by Google's internal container orchestration systems Borg and Omega \cite{burns_borg_2016}.
+Kubernetes is a free and open source software and it's ownership is later transfered to a more neutral
+organization Cloud Native Computing Foundation \cite{cncf} that is run by Linux Foundation. 
+\cite{linux_foundation} Kubernetes is written in Go programming language.
 It can be installed into physical servers, local virtual machines or public cloud services. Although
-Docker now has it's own integrated container orchestration solution called Docker Swarm, Kubernetes
-stays as the most widely used container orchestration software.
+Docker now has it's own integrated container orchestration solution called Docker Swarm 
+\cite{docker_swarm}, Kubernetes stays as the most widely used container orchestration software.
 
 \subsection{Architecture}
 Kubernetes implements a typical master slave architecture. These are named as master nodes and worker
@@ -538,16 +582,16 @@ of Kubernetes architecture can be seen at Figure \ref{fig:k8sarch}
 \begin{figure}
 \centering
 \includegraphics[]{k8s-arch.png}
-\caption{Kubernetes Architecture}
+\caption{Kubernetes Architecture \cite{kube_arch}}
 \label{fig:k8sarch}
 \end{figure}
 
 API server is the component that serves the Kubernetes API. The entire control plane of Kubernetes is
 built on the API and components doesn't have any other way to communicate with each other. API server
 is designed to be stateless and all the necessary data is stored on etcd.
-Etcd is a distributed key value store that is developed by CoreOS. It serves as a central database for
+Etcd is a distributed key value store that is developed by CoreOS \cite{coreos}. It serves as a central database for
 the Kubernetes cluster. Since etcd stores the whole cluster state, consistency and fault tolerance is
-critical. It uses a consensus algorithm called raft to keep track of all the changes in etcd nodes.
+critical. It uses a consensus algorithm called raft \cite{raft} to keep track of all the changes in etcd nodes.
 Scheduler is responsible for assigning containers to appropriate worker nodes considering the resource
 requirements, hardware conditions and several other factors.
 Controller manager is a collection of software that watches the current cluster state and checks if it
@@ -561,9 +605,9 @@ Kubernetes used Docker as the main container runtime. To support different conta
 has to be modified significantly. Since it would be quite difficult for each runtime vendor to make
 this modifications a common API is developed to easily integrate other runtimes into Kubernetes. This
 API is called the Container Runtime Interface (CRI). While this is a relatively new technology,
-introduced with Kubernetes version 1.5 there is some implementations using CRI such as CRI-O which
+introduced with Kubernetes version 1.5 there is some implementations using CRI such as CRI-O \cite{crio} which
 tries make Kubernetes compatible with Open Container Initiative runtimes and Rktlet a CRI
-implementation of the CoreOS runtime rkt.
+implementation of the CoreOS runtime rkt \cite{rkt}.
 
 \subsection{Workloads}
 For creating or accessing Kubernetes resources a developer first has to select an API client to work
@@ -580,7 +624,8 @@ application or a service. Pods are made from container or containers, IP address
 storage resources. Multiple containers within a Pod shares the Pod IP address and can communicate via
 localhost. The namespaces and the IP address belongs to infrastructure container called, pause 
 container and all other containers created runs as it’s children. so that failures among any of the 
-pods containers don't affect each other and any of the containers can be safely restarted. It's 
+pods containers don't affect each other and any of the containers can be safely restarted. 
+\cite{sayfan_mastering_2018} It's 
 recommended to only put applications that needs to be on the same namespace into a Pod together. This
 includes the complimentary services such as logging, metric collection etc. Bundling application
 containers and complimentary containers into a single pod also called the side car pattern. Pods are
@@ -610,7 +655,8 @@ Pods. The default behavior of services is to assign a virtual IP (called Cluster
 then forward traffic to this virtual IP to the Pods defined. Inside a node kube-proxy is responsible
 from getting service definition from API and preparing forwarding rules generally using IP tables.
 Beside using ClusterIP’s services can also define a port in each node for access called NodePort and
-Services can also use load balancers if the infrastructure below supports it.
+Services can also use load balancers if the infrastructure below supports it. 
+\cite{marmol_networking_2015}
 IP addresses of Services are only accessible from inside the cluster. For inbound connections to reach
 any Service therefore any Pod there is a resource called Ingress. Ingresses are basically a set of rules
 that forwards any inbound connection to any Service according to its definition. This definitions can
@@ -802,6 +848,9 @@ experiments significantly.
 For future work with a proof of concept MANO implementation for Kubernetes can be developed using high
 performance networking software and other fundamental technologies required for network function
 virtualization.
+
+\bibliography{ugurcan_thesis}
+\bibliographystyle{dcu}
 
 \appendix
 \lstset{%
