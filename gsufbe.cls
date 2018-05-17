@@ -592,7 +592,7 @@ to\hsize{\hfil\box\@tempboxa\hfil}
 \def\maketitle{\begin{titlepage}\normalsize
 \let\footnotesize\small \let\footnoterule\relax \setcounter{page}{1}
 \null \nointerlineskip
- \begin{center} \vskip 0.30cm plus0pt
+ \begin{center} \vskip 0.00cm plus0pt
  \nointerlineskip
  \vbox{\oneandhalfspacing \textbf{\MakeUppercase{\@disptitle}} \\(\MakeUppercase{\@trtitle)}}
  \vbox{}
@@ -667,7 +667,7 @@ to\hsize{\hfil\box\@tempboxa\hfil}
  \fi
  \prechapter*{\begin{flushleft}\"{O}ZET\end{flushleft}}
 \selectlanguage{turkish}
-\@mkboth {\raggedright \"{O}ZET}{\raggedright\"{O}ZET}  \oneandhalfspacing
+\@mkboth { \raggedright \"{O}ZET}{\raggedright\"{O}ZET}  \oneandhalfspacing
 \ifd@uble\doublespacing\else\ifs@ngle\singlespacing\else\oneandhalfspacing\fi\fi
 \@oztext}
 \def\endshowoz{\vskip 1.5\baselineskip \par \noindent \textbf{Anahtar Kelimeler :} \@anahtarklm
@@ -697,7 +697,7 @@ to\hsize{\hfil\box\@tempboxa\hfil}
 \if@twocolumn
     \@restonecoltrue\onecolumn
  \fi
- \prechapter*{\vskip 0.3cm \begin{flushleft} ABSTRACT \end{flushleft}}\@mkboth {ABSTRACT}{ABSTRACT} 
+ \prechapter*{\vskip 0.0cm \begin{flushleft} ABSTRACT \end{flushleft}}\@mkboth {ABSTRACT}{ABSTRACT} 
 \selectlanguage{english}
  
 \ifd@uble\doublespacing\else\ifs@ngle\singlespacing\else\oneandhalfspacing\fi\fi
@@ -731,7 +731,7 @@ to\hsize{\hfil\box\@tempboxa\hfil}
 \null
 \parindent0cm
 \singlespacing
-\vskip1.0cm plus0pt minus2mm \nointerlineskip
+\vskip0.7cm plus0pt minus2mm \nointerlineskip
 \parbox[t]{15cm}{\begin{center} \@approvallabel\end{center}}
 \vskip1.0cm plus0pt minus2mm \nointerlineskip
 \parbox[t]{15cm}{\begin{center}\singlespacing \bf{\MakeUppercase{\@disptitle}}\end{center}}
@@ -842,7 +842,7 @@ to\hsize{\hfil\box\@tempboxa\hfil}
     \@restonecoltrue\onecolumn
 \fi
 \vskip6.5mm
-\prechapter*{\vskip0.5cm \begin{flushleft} ACKNOWLEDGMENTS \end{flushleft}} 
+\prechapter*{\vskip0.2cm \begin{flushleft} ACKNOWLEDGMENTS \end{flushleft}} 
 \@mkboth{ACKNOWLEDGMENTS}{ACKNOWLEDGMENTS}
 \addcontentsline{toc}{leads}{\protect\numberline\MakeUppercase{{}ACKNOWLEDGEMENTS}}
 \oneandhalfspacing
