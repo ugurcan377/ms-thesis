@@ -26,5 +26,7 @@ spec:
         - mountPath: /var/www/html/index.html
           name: dash-index
         resources:
-
+          requests:
+            cpu: "10m"
+          limits:
 

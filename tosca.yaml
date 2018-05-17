@@ -26,6 +26,9 @@ topology_template:
           name: ping
           parameters:
             count: 3
+            interval: 10
+          actions:
+            failure: respawn
 
 
 

@@ -1,7 +1,3 @@
-            interval: 10
-          actions:
-            failure: respawn
-
     CP1:
       type: tosca.nodes.nfv.CP.Tacker
       properties:
