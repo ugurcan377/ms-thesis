@@ -670,7 +670,7 @@ Kubernetes project itself also provides an nginx based controller in their Githu
 
 \chapter{Experimentation}
 \section{Setup}
-This section will explain the test environments that all the experimentations will use.  While this
+This section will explain the test environments that all the experimentations will run on.  While this
 setup has many components, all the software components are selected from available free and open source
 tools.
 
@@ -684,46 +684,58 @@ The hardware used in this setup is a desktop computer.  It's specifications are 
 
 One of most essential parts of this setup would be a cloud platform that can run and manage containers.
 We chose the Kubernetes container orchestration software as a cloud platform after considering it's
-features, widespread adoption and maturity.  There is no standard way to setup a Kubernetes cluster.
-While minikube can be used for development and testing purposes.  It's method of creating a single node
-cluster inside of a virtual machine would makes it unsuitable for mimicking actual clusters.  Another
-tool for building clusters by the Kubernetes team is kubeadm.  Although it's currently on beta, it
-allows easy installation among multiple nodes regardless of type.  We selected kubeadm as the 
+features, widespread adoption and maturity.  As of yet there is no standard way to build a Kubernetes
+cluster.  Considering manually installing Kubernetes to each node would be unrealistic at scale, there
+are several installation tools that can be selected to build a Kubernetes cluster.
+
+While minikube is one of the easiest to installation tool available, it's created for development and
+testing purposes.  It's method of creating a single node
+cluster inside of a virtual machine would makes it unsuitable for mimicking real world clusters.  Another
+tool for building clusters is kubeadm which is developed by the Kubernetes team.  Although it's currently
+on beta, it allows easy installation among multiple nodes regardless of type. Kubeadm also leaves the
+network setup to the administrator's choice via the CNI.  Thus allowing them to experiment with different
+network configurations. We selected kubeadm as the 
 installation tool for our work.  Installing kubeadm inside of Docker containers instead of virtual
-machines we built a three machine Kubernetes cluster with one master and two nodes.  This pattern is
-often called dind or Docker in Docker.  Kubeadm also leaves the network setup to the administrator's
-choice via the CNI.  Thus allowing us to experiment with different network configurations.
+machines we built a three machine Kubernetes cluster with one master and two nodes.  This pattern of 
+installing another Docker daemon inside of a container is often called dind or Docker in Docker.
 
 For monitoring the cluster state and container performance, an external tool is needed.  As a monitoring
-tool we chose Prometheus a modern pull based monitoring that is developed by the same non-profit that
-also develops Kubernetes.  Prometheus can be easily installed using the operator model.  It can also
-receive metrics from other applications via extensions called exporters.  To use in the tests we also 
-prepared a Docker image with a modified web server to be able send usage metrics to Prometheus.  This
-docker image contains a Nginx web server version 1.12.2 compiled with nginx-vts module.
+tool we chose Prometheus a modern pull based monitoring that is developed by the same non-profit 
+organization who also develops Kubernetes itself. It can also receive metrics from other applications
+via extensions called exporters. Prometheus can be easily installed using the prometheus-operator.
+Operators are special types of resources in Kubernetes.  Each operator has a set of custom defined
+workloads for managing that application. Operator pattern is preferred for automating applications that
+requires specific operational know-how to manage.  This kinds of applications are often stateful such as
+databases, monitoring tools etc.
 
 \section{Experiment Design}
-We designed an experiment for measuring network performance on Kubernetes using several different
-network setups.
+We designed a few experiments for measuring network performance on Kubernetes using several different
+setups.
 
 As we mentioned before contrary to virtual machines, if they are not constrained containers have full
 access to host machines computing resources and in a typical cloud environment we can assume that
 containers will always run with constrained resources.  Because of that will also constrain our
-containers' resources.  Until otherwise stated each pod will be constrained to 1/10th of a CPU core.
+containers' resources.  Until otherwise stated each pod will be constrained to quarter of a CPU core.
 
-The test application will be a simple web server.  It will be deployed to the cluster via Kubernetes
-deployments using our Docker image.  Kubernetes deployments are ideal deployment tools for this case 
-because they can create and maintain a specified number of instances for an application and they also
-can easily be scaled horizontally.  We will create 3 separate deployments and for varying number of
+The test application will be nginx. While commonly known as a web server, it's often used in network
+functions such as load balancer and reverse proxy. We think it will representative for a simple network
+function.  It will be deployed to the cluster via Kubernetes
+deployments using a custom Docker image.To use in the tests we also  prepared a Docker image with a
+modified web server to be able send usage metrics to Prometheus.  This Docker image contains a nginx
+version 1.12.2 compiled with nginx-vts module. Kubernetes deployments are ideal deployment tools for
+this case  because they can create and maintain a specified number of instances for an application and
+they also can easily be scaled horizontally.  All containers inside a deployment will be exposed 
+through a single endpoint using Kubernetes NodePort services.
+
+For the first experiment we will create 3 separate deployments and for varying number of
 instances in each deployment we will run series of tests simulating network traffic.  For simulating
 network traffic a HTTP load testing tool bombardier will be used.  It's a command line tool written in
-Go programming language and it can save results in JSON format for easier further processing.  All
-containers inside a deployment will be exposed through single endpoints using Kubernetes NodePort 
-services.
+Go programming language and it can save results in JSON format for easier further processing. 
 
 Our methodology for running the tests will be the following.  
 \begin{enumerate}
- \item First we will choose a network setup and then create a Kubernetes cluster with 2 nodes.
- \item For each step we will create a pre-determined amount of instances for each deployment.
+ \item First we will initialize three deployments with minimum amount of instances
+ \item For each step we will scale the deployments to a pre-determined amount of instances for each deployment.
  \item For each deployment we will run the load test software to send various amount of requests from
  various amount of concurrent connections
 \end{enumerate}
@@ -774,6 +786,18 @@ the same host starts to experience heavy load.  Second if multiple different ser
 load how does this affect each other and other containers on the host.  For this reasons we designed a
 scheme that always have a control application that has a static instance count and instance counts of 
 the other one or two application changes constantly.
+
+The difference between microservices and monolithic applications is considered essential in both Docker
+and Kubernetes. For figuring out how this impacts the performance of applications we designed a second
+experiment. In this second experiment we compared two deployments with equal amount resources. One with
+a single container and other with a number of instances. While this isn't representative of real world
+microservice, it will be useful for measuring the overhead from using multiple containers.
+
+There are few changes at the methodology for this experiment. Since instance counts for this experiment
+is static. This allows for more variety in testing parameters. Concurrent connection count will differ
+from 100 connections to 2000 connections with increments of 50. Since connection count is the more
+important variable we will use static durations of 2 minutes compared to request counts. This will 
+allow more accuracy and predictable testing durations.
 
 \section{Results}
 We executed the test set described above on three different Kubernetes networking plugins Calico,
