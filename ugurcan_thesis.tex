@@ -715,7 +715,8 @@ setups.
 As we mentioned before contrary to virtual machines, if they are not constrained containers have full
 access to host machines computing resources and in a typical cloud environment we can assume that
 containers will always run with constrained resources.  Because of that will also constrain our
-containers' resources.  Until otherwise stated each pod will be constrained to quarter of a CPU core.
+containers' resources.  Until otherwise stated each pod will be constrained to a tenth of a CPU core
+for the first experiment and a quarter of a CPU core for the second experiment.
 
 The test application will be nginx. While commonly known as a web server, it's often used in network
 functions such as load balancer and reverse proxy. We think it will representative for a simple network
@@ -800,37 +801,36 @@ important variable we will use static durations of 2 minutes compared to request
 allow more accuracy and predictable testing durations.
 
 \section{Results}
-We executed the test set described above on three different Kubernetes networking plugins Calico,
-Flannel and Weave.  These plugins are selected because they are general purpose networks using
-different architectures and we thought it would paint a accurate picture for Kubernetes networking
-space.  
+We executed the test set described above on Kubernetes cluster that is defined in the setup section
+The experiment setup was run by automated scripts 10 times.  The results were then plotted using the
+arithmetic mean of the data collected from 10 experiments.
 
-The experiment setup was run by automated scripts 10 times for each different cluster.  The
-results were then plotted using the arithmetic mean of the data collected from 10 experiments.
+% \begin{figure}
+% \centering
+% \includegraphics[]{calico.png}
+% \caption{Experimentation results for the cluster with Calico networking}
+% \label{calico}
+% \end{figure}
+% 
+% \begin{figure}
+% \centering
+% \includegraphics[]{weave.png}
+% \caption{Experimentation results for the cluster with Weave networking}
+% \label{weave}
+% \end{figure}
 
-\begin{figure}
-\centering
-\includegraphics[]{calico.png}
-\caption{Experimentation results for the cluster with Calico networking}
-\label{calico}
-\end{figure}
 \begin{figure}
 \centering
 \includegraphics[]{flannel.png}
-\caption{Experimentation results for the cluster with Flannel networking}
+\caption{Test results for the first experiment}
 \label{flannel}
-\end{figure}
-\begin{figure}
-\centering
-\includegraphics[]{weave.png}
-\caption{Experimentation results for the cluster with Weave networking}
-\label{weave}
 \end{figure}
 
 It can be seen for all cases even a ordinary desktop computer can run high number of container
 instances.  Even over 100 instances latency increase is very low.  This suggests even this computer is
 capable of running a higher number of containers.  High latency is at the initial step is expected 
-because only one container instance with constrained resources trying to respond to requests.  But when
+because only one container instance with constrained resources trying to respond to all of the requests.
+But when
 the instance count is increased latency improves linearly and upon reaching a point latency improvement
 is flattened.  There is slight increase at the final step because of the load increase of the host.
 
@@ -840,18 +840,29 @@ instance counts rather than any problems about co-location.  Latency of the cont
 seem to affected from the other applications' load, this fulfills one of important requirements for
 network function virtualization.
 
+\begin{figure}
+\centering
+\includegraphics[]{1vs10.png}
+\caption{Test results for the second experiment}
+\label{1vs10}
+\end{figure}
+
 Single instances were affected greatly from the changes in number of concurrent connections and total
 request count. Mean latency increased linearly with number of connections. From our first experiment
-with 20 concurrent connections and 10000 requests to our  last experiment with 100 connections and 
+with 20 concurrent connections and 10000 requests to our last experiment with 100 connections and 
 100000 connections. There has been a nearly total 500 percent increase with latency. However for higher
 instance counts increase was around 150 percent.
 
-All three network plugins had very similar results. The scope may not have been large enough to observe
-the differences between these distinct network setups. BGP based network solution Calico performed
-marginally better compared to overlay based network solutions Flannel and Weave.
+The second experiment was also run by automated scripts.  The results were then plotted using the 
+arithmetic mean of the data collected from the experiments. Besides from mean and maximum latency this
+results also include a new type of a metric called percentile metrics. Percentile metrics are 
+calculated by sorting the results from minimum to maximum and then disregarding highest 100-n
+percent of the results. The maximum result remaining is called the nth percentile result. Percentile
+results are used to present a more accurate state about the application since the arithmetic means have
+a tendency to be skewed by outlier data points. The percentile values are generally used in practice
+are 90th, 95th and 99th. They are often accompanied by the median 50th result. We will use 50th, 95th
+and 99th percentile values for this experiment.
 
-This results clearly show that there are clear advantages of using the microservice architecture. There
-were minimal overheads for using multiple services and performance gained from their use was significant.
 
 \chapter{Conclusion}
 Virtualization is one of essential technologies behind modern computing infrastructure.  In this work we
@@ -881,7 +892,7 @@ function virtualization in containers.  And in the future more practical solutio
 One of the main limitations of this work was the limited computing resources.  Our testbeds was 
 built into a common desktop computer.  Which had very few resources compared to a common cloud
 environment and this made it very hard to design a realistic system and limited the scale of our
-experiments significantly.
+experiments significantly. 
 
 For future work with a proof of concept MANO implementation for Kubernetes can be developed using high
 performance networking software and other fundamental technologies required for network function
