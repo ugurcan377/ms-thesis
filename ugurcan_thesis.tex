@@ -798,7 +798,21 @@ There are few changes at the methodology for this experiment. Since instance cou
 is static. This allows for more variety in testing parameters. Concurrent connection count will differ
 from 100 connections to 2000 connections with increments of 50. Since connection count is the more
 important variable we will use static durations of 2 minutes compared to request counts. This will 
-allow more accuracy and predictable testing durations.
+allow more accuracy and predictable testing durations. Testing parameters for second experiment can be
+found in Table \ref{secondexp}. In Kubernetes 1000m equals to a single CPU core.
+
+\begin{table}[h]
+\caption{Second experiment setups as instance count * CPU limits}
+\centering
+\begin{tabular}{ccc}
+ & Deployment 1 & Deployment 2 \\
+\specialrule{2pt}{1pt}{1pt}
+Setup A & 1 * 2500m & 10 * 250m \\
+Setup B & 1 * 5000m & 20 * 250m \\
+\hline
+\end{tabular}
+\label{secondexp}
+\end{table}
 
 \section{Results}
 We executed the test set described above on Kubernetes cluster that is defined in the setup section
@@ -826,6 +840,20 @@ arithmetic mean of the data collected from 10 experiments.
 \label{flannel}
 \end{figure}
 
+\begin{figure}
+\centering
+\includegraphics[]{1vs10.png}
+\caption{Setup A results for the second experiment}
+\label{fig:1vs10}
+\end{figure}
+
+\begin{figure}
+\centering
+\includegraphics[]{1vs20.png}
+\caption{Setup B results for the second experiment}
+\label{fig:1vs20}
+\end{figure}
+
 It can be seen for all cases even a ordinary desktop computer can run high number of container
 instances.  Even over 100 instances latency increase is very low.  This suggests even this computer is
 capable of running a higher number of containers.  High latency is at the initial step is expected 
@@ -839,13 +867,6 @@ only be observed on the step two and not other steps.  We can infer this is only
 instance counts rather than any problems about co-location.  Latency of the control application doesn't
 seem to affected from the other applications' load, this fulfills one of important requirements for
 network function virtualization.
-
-\begin{figure}
-\centering
-\includegraphics[]{1vs10.png}
-\caption{Test results for the second experiment}
-\label{1vs10}
-\end{figure}
 
 Single instances were affected greatly from the changes in number of concurrent connections and total
 request count. Mean latency increased linearly with number of connections. From our first experiment
@@ -863,6 +884,23 @@ a tendency to be skewed by outlier data points. The percentile values are genera
 are 90th, 95th and 99th. They are often accompanied by the median 50th result. We will use 50th, 95th
 and 99th percentile values for this experiment.
 
+Without use of percentile values, there seems to be a significant difference between deployment 1 and
+deployment 2 that suggests there is an huge overhead for using multiple containers. But percentile data
+clearly shows for 95 percent of the connections performed very similarly in these two deployments.
+But between 95th and 99th percentile deployment 2 performance decay rapidly compared to the deployment
+1 whose performance only starts to decay in last worst 1 percent of the connection. While this 
+situation warrants further research, it can be caused by nature of the testbed running the cluster on
+a desktop OS and nested virtualization. 
+
+Between setup A and B, resource limit for deployment 1 and instance count for deployment 2 is doubled.
+It was expected for deployment 1's latency to decrease. It was assigned more resources while load 
+stayed the same. But decrease in latency was minimal for most connections and only become noticeable
+in the slowest 5 percent of the connections. It can be concluded that the performance gain wasn't
+justified for the cost of extra resources.
+For deployment 2 the extra instances added more overhead and caused latency to increase. Even thought
+the increase in latency was even less noticeable compared to the deployment 1, it's clear that
+increasing the instance count wouldn't always improve the application performance. An optimal amount
+of instances has to be found for each application to achieve best performance.
 
 \chapter{Conclusion}
 Virtualization is one of essential technologies behind modern computing infrastructure.  In this work we
