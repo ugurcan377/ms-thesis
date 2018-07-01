@@ -113,10 +113,11 @@
 %
 \abstract{
 In modern computing it has become common practice to run software on virtual environments and commodity
-hardware rather than specialized devices.  But most of the network appliances in use are still propriety
+hardware rather than specialized devices.  But most of the network appliances in use are still runs on 
+propriety
 hardware.  There is a significant amount of work in the network function virtualization domain to
 actualize these network functions in a virtualized manner.  In this work we evaluate if it’s feasible to
-use virtual network functions in a virtualization technology that is recently gaining traction called
+use these virtual network functions in a virtualization technology that is recently gaining traction called
 operating system level virtualization or container virtualization.  We examined if the necessary
 technologies for virtual network function exists in container domain and ran experiments on prevalent
 container platform Kubernetes to see if these platforms can match the requirements for the network 
@@ -131,7 +132,7 @@ functions.}
 Günümüzde yazılımları özelleşmiş donanımlar yerine standart donanımlarda sanallaştırma teknolojileri
 kullanarak çalıştırmak yaygın bir pratik haline gelmiştir.  Ancak bilgisayar ağları altyapısının çoğu
 halen özelleşmiş ticari çözümler üzerinde çalışmaktadır.  Ağ altyapısını sanallaştırmak üzerine 
-litatürde pek çok çalışma ağ işlevi sanallaştırma dalı altında bulunmaktadır.  Biz bu çalışmada ağ
+litaratürde ağ işlevi sanallaştırma dalı altında pek çok çalışma bulunmaktadır.  Biz bu çalışmada ağ
 işlevi sanallaştırma çözümlerin yakın zamanda yaygınlaşmaya başlayan farklı bir sanallaştırma
 teknolojisi olan işletim sistemi seviyesi sanallaştırma veya konteynır sanallaştırma kullanarak
 uygulanabiliriliğini değerlendirdik.  Ağ işlevi sanallaştırma için gerekli teknolojileri ve bunların
@@ -184,11 +185,12 @@ encouragements.}
 \chapter{Introduction}
 In recent years there has been an explosion of Internet users and Internet based services such as
 social networking sites, online messaging, video streaming etc.  From network operators perspective this
-accounts to a huge increase in network traffic while their earnings stayed constant.  Especially for the
+accounts to a huge increase in network traffic while their earnings stayed stagnant.  Especially for the
 telecom operators.  They are starting to experience unprecedented levels of mobile data usage and
 network traffic.  Statistics show that worldwide mobile device count and mobile Internet usage has 
 already surpassed desktop computers.  That's partially due to the advancements in processor and system
-on chip technologies that enabled mobile devices to rival their desktop counterparts. 
+on chip technologies that enabled mobile devices to have computing power that rivals their desktop
+counterparts. 
 
 Since mobile Internet usage is only expected to grow further, it's clear that telecom operators needs
 to improve their infrastructures.  But due to nature of their medium, telecom operators have specific
@@ -200,14 +202,14 @@ significantly improve mobile bandwidth and latency by integrating various new te
 
 One of these new technologies is called network function virtualization.  This technologies aims to
 implement the benefits of standard virtualization for vendor specific network appliances that usually
-comprises the back bone of telecom operators \cite{abdelwahab_network_2016}.
+comprises the back bone of telecom networks \cite{abdelwahab_network_2016}.
 
-An intention that can be inferred from telecom operators and industry organizations while designing the
-5G networks is to approximate telecom infrastructure to cloud infrastructure.  Companies that heavily
+Looking at the design of 5G networks it can be inferred that telecom operators and industry organizations
+have an intent to approximate telecom infrastructure to cloud infrastructure  Companies that heavily
 relies cloud computing recently started using a different way to design, develop, deploy and maintain
-their softwares.  That is decoupling software into independent services also called microservices and
-running them inside a more lightweight virtualization solution called containers.  This approach is 
-often called a cloud native approach.
+their software.  This method includes decoupling software into independent services also called 
+microservices and running them inside a more lightweight virtualization solution called containers. 
+This approach is often called a cloud native approach.
 
 In this work we will try to examine the feasibility of combining network function virtualization with
 cloud native architecture using the prevalent container platform Kubernetes.
@@ -215,14 +217,14 @@ cloud native architecture using the prevalent container platform Kubernetes.
 \section{Thesis Outline}
 This thesis will follow the structure that is described below.
 
-Chapter 2 examines the literature about the current state of the research that is made in this field. 
+Chapter 2 examines the literature about the current state of the research in this field. 
 
-Chapter 3 presents an introduction for the network function virtualization domain.  The reference
+Chapter 3 presents an introduction on the network function virtualization domain.  The reference
 architecture, most of the works in the literature are based on and one of the implementations of this
 model will be explored.
 
 Chapter 4 presents the history and state of art of the container virtualization.  Two prominent
-technologies Docker and Kubernetes will be explained in detail.
+technologies Docker and Kubernetes will be explained in a detailed manner.
 
 Chapter 5 describes the experimentation phase.  The experiment design and used methods will be explained
 alongside with the results of experiments.
@@ -434,7 +436,7 @@ It's called operating system level virtualization or more commonly container vir
 container virtualization virtual machines or containers have their own process and resource space but
 they use host machines kernel and resources directly.  Without the need of complete isolation and an
 unaware guest OS container virtualization can achieve faster start up times, less resource consumption
-and smaller images \cite{joy_performance_2015}.  But since all containers use the same kernel isolation
+and smaller images \cite{joy_performance_2015}.  But since all containers use the same kernel, isolation
 between different containers is weaker.
 
 The earliest attempt for operating system level virtualization can be traced to the UNIX chmod command.
@@ -450,9 +452,9 @@ have their own user structure, subject to configurable resource limits and can b
 physical machines without the need of shutting down \cite{bernstein_containers_2014}.
 
 Despite both the concept and the technologies that make it possible were around for some time.
-Containers are only recently started to see wide spread adoption.  This can be explain with a couple
+Containers are only recently started to see wide spread adoption.  This can be attributed to a few
 reasons.  While Linux became one of the major platforms in the server domain there wasn't any container
-technology available that can be run on an unmodified Linux kernel.  Furthermore Linux kernel lacked
+technologies available that can be run on an unmodified Linux kernel.  Furthermore Linux kernel lacked
 some of the essential capabilities to implement a container system such as resource management for
 processes.  Before cgroups was introduced in 2008 Linux kernel didn't have the capacity for controlling
 and limiting the resources of a process or group of processes.  Using cgroups and earlier introduced
@@ -485,9 +487,9 @@ machine and the production machine will be the same \cite{boettiger_introduction
 
 Furthermore Docker proposes that each component of an application should be run in a 
 different container thus encouraging developers to use a loosely coupled software architecture that is 
-also called micro service architecture.  According to micro service architectures managing and updating
+also called micro service architecture.  According to micro service architectures, managing and updating
 individual components of applications are easier compared to managing a monolithic application which
-all of its components runs in same environments and problems in one component can affect the whole
+all of its components runs in same environment and problems in one component can affect the whole
 application.
 
 \subsection{Docker Images}
@@ -496,7 +498,7 @@ behind Docker.  This is achieved by using the Docker images.  Contrary to virtua
 has to install a new operating system on a clean virtual disk or use pre-installed disk image.  Docker 
 provides the tools to easily create new images from scratch or from existing images.  Docker also
 provides a central registry called Docker Hub where official and community created images can be found.
-New images are created by using a template format called Dockerfiles.To create an image user has to
+New images are created by using a template format called Dockerfiles.  To create an image user has to
 choose a base image and then has to describe what changes has to be made on this base image with
 provided commands.  An example Dockerfile can be found at the \ref{appendix:docker}.  Then using the
 Docker build command will create the intended image.
@@ -556,9 +558,9 @@ Current state of Docker architecture can be seen at the Figure \ref{fig:dockerar
 
 \section{Kubernetes}
 The one of most important topics about operating cloud environments is the question of scale.  In a
-practical case it would be expected to run numerous amounts of containers in many hosts and since
-cloud systems has to run with minimum human intervention.  The obvious problem would be coordination
-of the containers in a automated manner.  The problem domain can be defined as container orchestration.
+practical case it would be expected to run numerous amounts of containers in many hosts. Since
+cloud systems has to run with minimum human intervention, the obvious problem would be coordination
+of the containers in a automated manner.  The problem domain can be defined as orchestration.
 For container orchestration the main issues would be how containers will be distributed among hosts,
 how they will communicate, what happens when the containers fail, what happens in case of on outage,
 how will applications scale etc.
@@ -575,8 +577,9 @@ Docker now has it's own integrated container orchestration solution called Docke
 
 \subsection{Architecture}
 Kubernetes implements a typical master slave architecture.  These are named as master nodes and worker
-nodes.  Each of these nodes has to run several Kubernetes components according to their roles in the
-cluster.  For master nodes the required components are API server, etcd, scheduler and
+nodes.  Nodes are only separated among themselves by which Kubernetes components they run and each role 
+has to run a required set of components.  For master nodes the required components are API server, etcd,
+scheduler and
 controller manager, for worker nodes the required components are kubelet and proxy.  A representation
 of Kubernetes architecture can be seen at Figure \ref{fig:k8sarch}
 
@@ -616,8 +619,10 @@ with.  It can be the web interface, one of the programming language clients or t
 interface.  Then they would need a definition of the resource or resources they want to create as an
 Kubernetes API object.  These object definitions or specs can be in JSON or YAML format and it would be
 fair to liken them to orchestration templates.  An example Kubernetes object spec can be found in
-\ref{appendix:k8spec}.  Kubernetes puts a special emphasis on associating the objects.  Associating your
-objects with meta data and using this meta data in other objects or applications is one of the strong
+\ref{appendix:k8spec}.  One of the crucial features of Kubernetes specs is the importance of meta data
+about the resources.
+Once resources are described via labels and annotations, this meta data is used both throughout 
+Kubernetes and other third party software using Kubernetes. This emphasis on meta data is one of the strong
 suits of Kubernetes specs.
 
 The main unit of operation in Kubernetes is called a Pod.  It can be seen as an abstraction of a single
@@ -637,7 +642,7 @@ constructs are called controllers.
 ReplicaSets are a controller construct that can run any number copies of a Pod at the same time.  A 
 ReplicaSet will monitor the Pods and ensure that number of Pods designated in ReplicaSet definition are
 running at any given time.  It will spawn new Pods if some of current ones fail etc. ReplicaSets can
-also be used for scaling.  
+be scaling for managing different numbers of Pods.  
 
 Developments are higher level controllers that also uses ReplicaSets for their operations.  Main feature
 of Deployments is to make updates to Pods easy and safe.  They can progressively update the Pods they
@@ -843,7 +848,7 @@ arithmetic mean of the data collected from 10 experiments.
 
 \begin{figure}
 \centering
-\includegraphics[]{1vs5.png}
+\includegraphics[]{1vs10.png}
 \caption{Setup A results for the second experiment}
 \label{fig:1vs5}
 \end{figure}
