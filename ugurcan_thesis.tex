@@ -29,6 +29,7 @@
 \usepackage[section]{placeins}
 \usepackage{float}
 \usepackage{listings}
+\usepackage{multirow}
 
 
 % End of Latex Packages
@@ -206,7 +207,7 @@ comprises the back bone of telecom networks \cite{abdelwahab_network_2016}.
 
 Looking at the design of 5G networks it can be inferred that telecom operators and industry organizations
 have an intent to approximate telecom infrastructure to cloud infrastructure  Companies that heavily
-relies cloud computing recently started using a different way to design, develop, deploy and maintain
+relies on cloud computing recently started using a different way to design, develop, deploy and maintain
 their software.  This method includes decoupling software into independent services also called 
 microservices and running them inside a more lightweight virtualization solution called containers. 
 This approach is often called a cloud native approach.
@@ -681,9 +682,9 @@ tools.
 
 The hardware used in this setup is a desktop computer.  It's specifications are in the following
 \begin{itemize}
- \item 6 core Intel i5-8600K processor
- \item Gigabyte Z370 HD3P Motherboard
- \item 16 GiB 3000 Mhz DDR4 memory
+ \item 8 core Intel i7-920 processor
+ \item Asus P6T Motherboard
+ \item 20 GiB 1066 Mhz DDR3 memory
  \item Ubuntu 16.04 64 bit operating system
 \end{itemize}
 
@@ -804,18 +805,20 @@ is static. This allows for more variety in testing parameters. Concurrent connec
 from 100 connections to 2000 connections with increments of 50. Since connection count is the more
 important variable we will use static durations of 2 minutes compared to request counts. This will 
 allow more accuracy and predictable testing durations. Testing parameters for second experiment can be
-found in Table \ref{secondexp}. In Kubernetes 1000m equals to a single CPU core.
+found in Table \ref{secondexp}. In Kubernetes 1000m refers to a single CPU core.
 
 \begin{table}[h]
 \caption{Second experiment setups as instance count * CPU limits}
 \centering
-\begin{tabular}{ccc}
- & Deployment 1 & Deployment 2 \\
-\specialrule{2pt}{1pt}{1pt}
-Setup A & 1 * 1250m &  5 * 250m \\
-Setup B & 1 * 2500m & 10 * 250m \\
-Setup C & 1 * 5000m & 20 * 250m \\
+\begin{tabular}{ |l|l|l|l| }
 \hline
+Setup & Deployment 1 & Deployment 2 & Deployment 3 \\ \hline
+Setup A &  ~5 *  250m &  10 *  250m &  20 *  250m  \\
+Setup B &  1 * 1250m &   1 * 2500m &   1 * 5000m  \\ \hline
+\multirow{3}{*}{Setup C} 
+ & 10 *  125m & 20 *  125m & 40 *  125m \\
+ &  ~~5 *  250m & 10 *  250m & 20 *  250m \\
+ &  ~~3 *  500m &  ~~5 *  500m & 10 *  500m \\ \hline
 \end{tabular}
 \label{secondexp}
 \end{table}
@@ -846,30 +849,9 @@ arithmetic mean of the data collected from 10 experiments.
 \label{flannel}
 \end{figure}
 
-\begin{figure}
-\centering
-\includegraphics[]{1vs10.png}
-\caption{Setup A results for the second experiment}
-\label{fig:1vs5}
-\end{figure}
-
-\begin{figure}
-\centering
-\includegraphics[]{1vs10.png}
-\caption{Setup B results for the second experiment}
-\label{fig:1vs10}
-\end{figure}
-
-\begin{figure}
-\centering
-\includegraphics[]{1vs20.png}
-\caption{Setup C results for the second experiment}
-\label{fig:1vs20}
-\end{figure}
-
 It can be seen for all cases even a ordinary desktop computer can run high number of container
 instances.  Even over 100 instances latency increase is very low.  This suggests even this computer is
-capable of running a higher number of containers.  High latency is at the initial step is expected 
+capable of running a higher number of containers.  High latency at the initial step is expected 
 because only one container instance with constrained resources trying to respond to all of the requests.
 But when
 the instance count is increased latency improves linearly and upon reaching a point latency improvement
@@ -891,8 +873,8 @@ The second experiment was also run by automated scripts.  The results were then 
 arithmetic mean of the data collected from the experiments. Besides from mean and maximum latency this
 results also include a new type of a metric called percentile metrics. Percentile metrics are 
 calculated by sorting the results from minimum to maximum and then disregarding highest 100-n
-percent of the results. The maximum result remaining is called the nth percentile result. Percentile
-results are used for presenting a more accurate state about the application in comparison to the
+percent of the results. The maximum remaining result is called the nth percentile result. Percentile
+results are used for presenting a more accurate state about the application performance in comparison to the
 arithmetic means.  This is mainly because of a few very slow requests can affect the average latency
 and percentile metrics allow for disregarding outlier results and presents a more accurate
 representation of the applications general performance. The percentile values are generally used in
@@ -900,24 +882,58 @@ practice
 are 90th, 95th and 99th. They are often accompanied by the median 50th result. We will use 50th, 95th
 and 99th percentile values for this experiment.
 
+\begin{figure}
+\centering
+\includegraphics[]{g5_10_20.png}
+\caption{Setup A results for the second experiment}
+\label{fig:g5_10_20}
+\end{figure}
+
+\begin{figure}
+\centering
+\includegraphics[]{ml_super_xl.png}
+\caption{Setup B results for the second experiment}
+\label{fig:ml_super_xl}
+\end{figure}
+
+\begin{figure}
+\centering
+\includegraphics[]{multi.png}
+\caption{Setup C results for the second experiment}
+\label{fig:multi}
+\end{figure}
+
 Without use of percentile values, there seems to be a significant difference between deployment 1 and
 deployment 2 that suggests there is an huge overhead for using multiple containers. But percentile data
 clearly shows for 95 percent of the connections performed very similarly in these two deployments.
 But between 95th and 99th percentile deployment 2 performance decays rapidly compared to the deployment
 1 whose performance only starts to decay in worst 1 percent of the connection.
 
-Between setup A, B and C, resource limits for deployment 1 and instance count for deployment 2 is 
+Between setup A, B and C, resource limits for deployment 2 and instance count for deployment 1 is 
 doubled at each step.
 It is expected for deployment 1's latency to decrease. It was assigned more resources while load 
 stayed the same. But decrease in latency was minimal for most connections and only become significant
 in the slowest 5 percent of the connections.
-For deployment 2 from setup A to B there is a clear decrease in latency. But when instance count
+For deployment 1 from setup A to B there is a clear decrease in latency. But when instance count
 increased again at setup C, performance subtlety worsened. Even thought
-the increase in latency was barely noticeable compared to the deployment 1.
+the increase in latency was barely noticeable compared to the deployment 2.
+
 This shows that after a certain point the extra instances started to add more overhead and caused 
 latency to increase. it became clear that increasing the instance count wouldn't always improve
-the application performance.
-An optimal amount of instances has to be found for each application to achieve best performance.
+the application performance. An optimal amount of instances has to be found for each application
+to achieve best performance.
+
+From setup C approach of experiments changes slightly. While comparing a single container
+with multiple containers can be useful in order to understand the amount of overhead. In actual use
+such a setup would be impractical. To mitigate that problem, a different series of experiment
+setups that includes a more evenly matched containers are introduced. Each setup contains one 
+deployment with more resources for each container and one container with more instances. The rate for
+extra resources and instances is always 2.
+
+Results of setups D to G supports the observations from the previous experiments. 
+
+
+
 
 \chapter{Conclusion}
 Virtualization is one of essential technologies behind modern computing infrastructure.  In this work we
