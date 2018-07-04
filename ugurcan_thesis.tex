@@ -813,12 +813,12 @@ found in Table \ref{secondexp}. In Kubernetes 1000m refers to a single CPU core.
 \begin{tabular}{ |l|l|l|l| }
 \hline
 Setup & Deployment 1 & Deployment 2 & Deployment 3 \\ \hline
-Setup A &  ~5 *  250m &  10 *  250m &  20 *  250m  \\
+Setup A &  ~5 *  250m &  10 *  250m &  20 *  250m  \\ \hline
 Setup B &  1 * 1250m &   1 * 2500m &   1 * 5000m  \\ \hline
 \multirow{3}{*}{Setup C} 
- & 10 *  125m & 20 *  125m & 40 *  125m \\
- &  ~~5 *  250m & 10 *  250m & 20 *  250m \\
- &  ~~3 *  500m &  ~~5 *  500m & 10 *  500m \\ \hline
+ & (a) 10 *  125m & 20 *  125m & 40 *  125m \\
+ & (b)~~5 *  250m & 10 *  250m & 20 *  250m \\
+ & (c)~~3 *  500m &  ~~5 *  500m & 10 *  500m \\ \hline
 \end{tabular}
 \label{secondexp}
 \end{table}
@@ -903,20 +903,22 @@ and 99th percentile values for this experiment.
 \label{fig:multi}
 \end{figure}
 
-Without use of percentile values, there seems to be a significant difference between deployment 1 and
-deployment 2 that suggests there is an huge overhead for using multiple containers. But percentile data
-clearly shows for 95 percent of the connections performed very similarly in these two deployments.
-But between 95th and 99th percentile deployment 2 performance decays rapidly compared to the deployment
-1 whose performance only starts to decay in worst 1 percent of the connection.
+Without use of percentile values, there seems to be a significant difference between setup A and
+setup B that suggests there is an huge overhead for using multiple containers. But percentile data
+clearly shows for 95 percent of the connections performed very similarly in these cases.
+But between 95th and 99th percentile deployments from setup A's performance decays more rapidly
+compared to those in setup B whose performance only starts to decay in slowest 1 percent of the
+connections.
 
-Between setup A, B and C, resource limits for deployment 2 and instance count for deployment 1 is 
-doubled at each step.
-It is expected for deployment 1's latency to decrease. It was assigned more resources while load 
-stayed the same. But decrease in latency was minimal for most connections and only become significant
-in the slowest 5 percent of the connections.
-For deployment 1 from setup A to B there is a clear decrease in latency. But when instance count
-increased again at setup C, performance subtlety worsened. Even thought
-the increase in latency was barely noticeable compared to the deployment 2.
+For setup A instance counts of the deployments are doubled in each case and for setup B resource
+limits of the deployments have been doubled.
+For setup A there is a clear decrease in latency from deployment 1 to 2. But when instance count
+increased again for deployment 3, performance subtlety worsened. Even thought
+the increase in latency was barely noticeable compared those in setup B.
+It is expected for instances in setup B's latency to decrease. It was assigned more resources while
+load stayed the same. But decrease in latency was significant from deployment 1 to 2, It was minimal
+for most connections from deployment 2 to 3 and only become noticeable in the slowest 5 percent of
+the connections.
 
 This shows that after a certain point the extra instances started to add more overhead and caused 
 latency to increase. it became clear that increasing the instance count wouldn't always improve
@@ -930,9 +932,19 @@ setups that includes a more evenly matched containers are introduced. Each setup
 deployment with more resources for each container and one container with more instances. The rate for
 extra resources and instances is always 2.
 
-Results of setups D to G supports the observations from the previous experiments. 
+While latency decreased for all cases from deployment 1a, 1b, 1c to 2a, 2b and 2c, latency increased
+or stayed similar from deployment 2a, 2b, 2c to 3a, 3b, 3c. This results from setup C also support
+s the observations from the previous experiments that after a saturation point adding more instances
+increases the overhead and therefore latency. This saturation point amounts to 2500m CPU resources
+for these setup. 
 
-
+The other important result from setup C is the significance of the balance between resource limits
+and instance counts. All the deployments in setup C has an equal amount of total resources but there
+is stark difference between their performance. With a correct configuration it's possible for multiple
+containers to achieve similar performances to their single container counterparts. While deployment 1b
+of setup C is seem to perform better than deployment 1 of setup B, it should be noted that the likely
+cause is the extra 250m resources the former has. But for deployment 2b of setup C and deployment 2
+of setup B. Albeit latter performs better, the overall performances is very similar.
 
 
 \chapter{Conclusion}
@@ -947,23 +959,28 @@ tried to understand their capabilities, if there are alternatives or counterpart
 are required by virtual network functions.
 
 We built a container testbed with Kubernetes for testing how containers perform under load and can they
-adhere to often strict requirements for network functions.  Our preliminary results show that the cases
-that doesn't use specialized high speed networking software performed similarly regardless of which
-networking setup was used.  Results were varied between different experiments.  Our conclusion was as is
-standard container clusters can not be used for implementing virtual network functions without making use
-of the cloud native approach these systems were made to utilize. But since this requires a system redesign
-for the most of the network services it can not be recommended for each case to use container based systems.
+adhere to often strict requirements for network functions.  Our preliminary results show that even for
+a very small percent of results there is significant variance in latency. This may not acceptable for some
+network functions. As a solution for this problme specialized high speed networking software may be needed.
+Our conclusion was as is standard container clusters can not be used for implementing virtual network
+functions without making use of the cloud native approach these systems were made to utilize. But since
+this requires a system redesign for the most of the network services it can not be recommended for each
+case to use container based systems.
 
 Fundamental technologies that can used be for implementing virtual network functions in
-container environments are present.  Considering there is still no out of box solution exists these are
-still immature and hard to install and use.  We believe there are promising developments achieve network
+container environments are present.  Considering there are still no out of box solutions and the existing
+solutions are still immature and hard to install and use.  We believe there are promising developments
+achieve network
 function virtualization in containers.  And in the future more practical solutions will be developed.
 
 \section{Limitations and Future Work}
 One of the main limitations of this work was the limited computing resources.  Our testbeds was 
 built into a common desktop computer.  Which had very few resources compared to a common cloud
 environment and this made it very hard to design a realistic system and limited the scale of our
-experiments significantly. 
+experiments significantly. One other possible downside is since load testing tool and container cluster
+used the same computing resources, virtual networking that is highly dependent on CPU could be negatively
+affected by this situation. While as a constant it doesn't affect our experiment, for future reference it
+might be better to also track the CPU usage during experiments.
 
 For future work with a proof of concept MANO implementation for Kubernetes can be developed using high
 performance networking software and other fundamental technologies required for network function
