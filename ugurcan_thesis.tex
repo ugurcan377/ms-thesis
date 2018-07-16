@@ -92,10 +92,10 @@
 %\cosupervisor[assocprof]{JANE DOE}
 %\departmentofcosupervisor{Management, UCL}
 % Ask your supervisor if you are not sure
-\committeememberi[assistprof]{}
-\affiliationi{}
-\committeememberii[assistprof]{}
-\affiliationii{}
+\committeememberi[assocprof]{TOLGA OVATMAN}
+\affiliationi{Computer Engineering Department, ITU}
+\committeememberii[assistprof]{TEOMAN NASKALI}
+\affiliationii{Computer Engineering Department, GSU}
 %\committeememberiii[assistprof]{ATAY ÖZGÖVDE}
 %\affiliationiii{Computer Engineering Department, GSU}
 % Fourth committee member
@@ -115,14 +115,13 @@
 \abstract{
 In modern computing it has become common practice to run software on virtual environments and commodity
 hardware rather than specialized devices.  But most of the network appliances in use are still runs on 
-propriety
-hardware.  There is a significant amount of work in the network function virtualization domain to
-actualize these network functions in a virtualized manner.  In this work we evaluate if it’s feasible to
-use these virtual network functions in a virtualization technology that is recently gaining traction called
-operating system level virtualization or container virtualization.  We examined if the necessary
-technologies for virtual network function exists in container domain and ran experiments on prevalent
-container platform Kubernetes to see if these platforms can match the requirements for the network 
-functions.}
+propriety hardware.  There is a significant amount of work in the network function virtualization domain
+to actualize these network functions in a virtualized manner.  In this work we conducted a series of
+performance tests to evaluate the compatibility of modern container based virtualization solutions for
+NFV. To accomplish this, we implemented a generic service on top of a prevalent container orchestration
+software Kubernetes and assessed its performance with numerous clients. Our conclusion is that they are
+generally compatible except for some cases that may require certain specialized technologies to mature
+for reliable use.}
 
 %
 % Abstract in French
@@ -135,10 +134,11 @@ kullanarak çalıştırmak yaygın bir pratik haline gelmiştir.  Ancak bilgisay
 halen özelleşmiş ticari çözümler üzerinde çalışmaktadır.  Ağ altyapısını sanallaştırmak üzerine 
 litaratürde ağ işlevi sanallaştırma dalı altında pek çok çalışma bulunmaktadır.  Biz bu çalışmada ağ
 işlevi sanallaştırma çözümlerin yakın zamanda yaygınlaşmaya başlayan farklı bir sanallaştırma
-teknolojisi olan işletim sistemi seviyesi sanallaştırma veya konteynır sanallaştırma kullanarak
-uygulanabiliriliğini değerlendirdik.  Ağ işlevi sanallaştırma için gerekli teknolojileri ve bunların
-konteynır teknolojilerilerindeki karşılıklarını inceledik ve önde gelen konteynır platformlarından biri
-olan Kubernetes kullanarak deneyler yaptık.
+teknolojisi olan işletim sistemi seviyesi sanallaştırma veya konteynır sanallaştırma ile uyumluluğunu
+değerlendirebilmek için bir takım testler yaptık. Bunun için önde gelen konteynır yönetim sistemlerinden
+Kubernetes üzerinde genel bir servis oluşturduk ve çeşitli miktarlarda istemciler kullanarak 
+performanslarını inceledik. Vardığımız sonuç bu teknolojilerin genel anlamda birbirleriyle uyumlu olduğu
+ancak bazı durumlar için gerekebilecek teknolojilerin olgunlaşması gerektiği yönünde oldu.
 }
 %
 % Acknowledgements
@@ -184,34 +184,36 @@ encouragements.}
 \newenvironment{prf}{\noindent{\bf Proof}}{$\hfill \Box$ \vspace{10pt}}
 
 \chapter{Introduction}
-In recent years there has been an explosion of Internet users and Internet based services such as
-social networking sites, online messaging, video streaming etc.  From network operators perspective this
-accounts to a huge increase in network traffic while their earnings stayed stagnant.  Especially for the
+In recent years, there has been an explosion of Internet users and Internet based services such as
+social networking sites, online messaging, video streaming etc.  From network operators perspective, this
+accounts to a huge increase in the network traffic while their earnings stayed stagnant.  This is 
+especially true for the
 telecom operators.  They are starting to experience unprecedented levels of mobile data usage and
 network traffic.  Statistics show that worldwide mobile device count and mobile Internet usage has 
 already surpassed desktop computers.  That's partially due to the advancements in processor and system
 on chip technologies that enabled mobile devices to have computing power that rivals their desktop
 counterparts. 
 
-Since mobile Internet usage is only expected to grow further, it's clear that telecom operators needs
+Since mobile Internet usage is only expected to grow further, it's clear that telecom operators need
 to improve their infrastructures.  But due to nature of their medium, telecom operators have specific
-requirements and it would be very costly to just try to increase the number of cell towers and base
-stations.  Operators and industry organizations well aware of this fact proposed a different
+requirements and it would be very costly to increase the number of cell towers and base
+stations.  Operators and industry organizations, well aware of this fact, proposed a different
 architecture when designing the next generation (5G) mobile networks.  5G mobile networks are being
 designed with Internet connectivity in mind.  They pursue to actualize dynamic, flexible networks that
 significantly improve mobile bandwidth and latency by integrating various new technologies.
 
-One of these new technologies is called network function virtualization.  This technologies aims to
-implement the benefits of standard virtualization for vendor specific network appliances that usually
+One of the related new technologies in ths perspective is called Network Function Virtualization (NFV).
+They aim to implement the benefits of standard virtualization for vendor specific network appliances that usually
 comprises the back bone of telecom networks \cite{abdelwahab_network_2016}.
 
-Looking at the design of 5G networks it can be inferred that telecom operators and industry organizations
-have an intent to approximate telecom infrastructure to cloud infrastructure  Companies that heavily
-relies on cloud computing recently started using a different way to design, develop, deploy and maintain
-their software.  This method includes decoupling software into independent services also called 
-microservices and running them inside a more lightweight virtualization solution called containers. 
-This approach is often called a cloud native approach.
+Looking at the design of 5G networks, it can be inferred that telecom operators and industry organizations
+have an intent to converge telecom and cloud infrastructures.  There is a recent trend among internet
+service companies to use a new and different way to design, develop, deploy and maintain
+software for cloud infrastructures.  This method includes decoupling software into independent services
+also called  microservices and running them inside a more lightweight virtualization solution called
+containers.  This approach is often called a cloud native approach.
 
+% Tekrar daha detayli bir sekilde problemi acikla
 In this work we will try to examine the feasibility of combining network function virtualization with
 cloud native architecture using the prevalent container platform Kubernetes.
 
@@ -521,7 +523,7 @@ write data to their disks would be unusable a writable layer is added when a con
 layer would be deleted when the container is removed until it's saved as a version of the image.
 While Docker can use different union file systems, by default AUFS is used.
 
-\subsection{Architecture}
+\subsection{Docker Architecture}
 Docker uses a rather simple server-client architecture for the creation and management of the
 containers.  The main components can be summarized as the Docker engine, the component that manages
 images and containers, Docker client, the component that users and administrators can send their
@@ -576,7 +578,7 @@ It can be installed into physical servers, local virtual machines or public clou
 Docker now has it's own integrated container orchestration solution called Docker Swarm 
 \cite{docker_swarm}, Kubernetes stays as the most widely used container orchestration software.
 
-\subsection{Architecture}
+\subsection{Kubernetes Architecture}
 Kubernetes implements a typical master slave architecture.  These are named as master nodes and worker
 nodes.  Nodes are only separated among themselves by which Kubernetes components they run and each role 
 has to run a required set of components.  For master nodes the required components are API server, etcd,
@@ -715,7 +717,7 @@ requires specific operational know-how to manage.  This kinds of applications ar
 databases, monitoring tools etc.
 
 \section{Experiment Design}
-We designed a few experiments for measuring network performance on Kubernetes using several different
+We designed a few experiments for measuring end to end performance on Kubernetes using several different
 setups.
 
 As we mentioned before contrary to virtual machines, if they are not constrained containers have full
@@ -732,14 +734,22 @@ modified web server to be able send usage metrics to Prometheus.  This Docker im
 version 1.12.2 compiled with nginx-vts module. Kubernetes deployments are ideal deployment tools for
 this case  because they can create and maintain a specified number of instances for an application and
 they also can easily be scaled horizontally.  All containers inside a deployment will be exposed 
-through a single endpoint using Kubernetes NodePort services.
+through a single endpoint using Kubernetes NodePort services. An example representation of the experiment
+setup can be seen in Figure \ref{fig:experiment}
+
+\begin{figure}
+\centering
+\includegraphics[]{experiment.png}
+\caption{A representation of the experiment setup}
+\label{fig:experiment}
+\end{figure}
 
 For the first experiment we will create 3 separate deployments and for varying number of
 instances in each deployment we will run series of tests simulating network traffic.  For simulating
 network traffic a HTTP load testing tool bombardier will be used.  It's a command line tool written in
 Go programming language and it can save results in JSON format for easier further processing. 
 
-Our methodology for running the tests will be the following.  
+Our methodology for running the tests for the first experiment will be the following.  
 \begin{enumerate}
  \item First we will initialize three deployments with minimum amount of instances
  \item For each step we will scale the deployments to a pre-determined amount of instances for each deployment.
@@ -748,6 +758,7 @@ Our methodology for running the tests will be the following.
 \end{enumerate}
 
 Number of instances used in the tests and parameters used for the load testing tools can be found below.
+Probability distribution of the request traffic in the experiments will be an uniform distribution.
 
 \begin{table}[h]
 \caption{Web server load testing parameters}
@@ -769,19 +780,20 @@ Connections & Total Requests\\
 \caption{Number of instances for each deployment}
 \centering
 \begin{tabular}{ccc}
-Deployment 1 & Deployment 2 & Deployment 3 \\
+Application 1 & Application 2 & Application 3 \\
 \specialrule{2pt}{1pt}{1pt}
 1 & 1 & 1 \\
-5 & 5 & 1 \\
 10 & 1 & 1 \\
-12 & 12 & 1 \\
 25 & 1 & 1 \\
-25 & 25 & 1 \\
-37 & 37 & 1 \\
 50 & 1 & 1 \\
-50 & 50 & 1 \\
 75 & 1 & 1 \\
 100 & 1 & 1 \\
+1 & 1 & 1 \\
+5 & 5 & 1 \\
+12 & 12 & 1 \\
+25 & 25 & 1 \\
+37 & 37 & 1 \\
+50 & 50 & 1 \\
 \hline
 \end{tabular}
 \label{instable}
@@ -804,21 +816,30 @@ There are few changes at the methodology for this experiment. Since instance cou
 is static. This allows for more variety in testing parameters. Concurrent connection count will differ
 from 100 connections to 2000 connections with increments of 50. Since connection count is the more
 important variable we will use static durations of 2 minutes compared to request counts. This will 
-allow more accuracy and predictable testing durations. Testing parameters for second experiment can be
-found in Table \ref{secondexp}. In Kubernetes 1000m refers to a single CPU core.
+allow more accuracy and predictable testing durations. For this experiment we will use another go based
+open source load testing tool called vegeta for getting percentile metrics.Testing parameters for second
+experiment can be found in Table \ref{secondexp}. CPU limits are expressed as a Kubernetes resource unit
+called milicores or milicpu that is equal to a thousandth of a CPU core. CPU limits are enforced by not
+letting a container use more CPU time than it's CPU limit as milicores * 100 in 100 miliseconds.
 
 \begin{table}[h]
 \caption{Second experiment setups as instance count * CPU limits}
 \centering
-\begin{tabular}{ |l|l|l|l| }
+\begin{tabular}{ |l|l|l| }
 \hline
-Setup & Deployment 1 & Deployment 2 & Deployment 3 \\ \hline
-Setup A &  ~5 *  250m &  10 *  250m &  20 *  250m  \\ \hline
-Setup B &  1 * 1250m &   1 * 2500m &   1 * 5000m  \\ \hline
-\multirow{3}{*}{Setup C} 
- & (a) 10 *  125m & 20 *  125m & 40 *  125m \\
- & (b)~~5 *  250m & 10 *  250m & 20 *  250m \\
- & (c)~~3 *  500m &  ~~5 *  500m & 10 *  500m \\ \hline
+Setup & Configuration 1 & Configuration 2 \\ \hline
+Setup A &  ~~5 *  250m & 10 *  250m \\
+Setup B & 10 *  250m &  20 *  250m \\
+Setup C &  1 * 1250m &   1 * 2500m \\
+Setup D &  1 * 2500m &   1 * 5000m \\ \hline
+\multirow{3}{*}{Setup E} 
+ &(a) 10 *  125m & 20 *  125m \\
+ &(b)  ~~5 *  250m & 10 *  250m \\
+ &(c)  ~~3 *  500m & ~~5 *  500m \\ \hline
+\multirow{3}{*}{Setup F}
+ &(a) 20 *  125m & 40 *  125m \\
+ &(b) 10 *  250m & 20 *  250m \\
+ &(c)  ~~5 *  500m & 10 *  500m \\ \hline
 \end{tabular}
 \label{secondexp}
 \end{table}
@@ -826,7 +847,7 @@ Setup B &  1 * 1250m &   1 * 2500m &   1 * 5000m  \\ \hline
 \section{Results}
 We executed the test set described above on Kubernetes cluster that is defined in the setup section
 The experiment setup was run by automated scripts 10 times.  The results were then plotted using the
-arithmetic mean of the data collected from 10 experiments.
+arithmetic mean of the data collected from 10 experiments. 
 
 % \begin{figure}
 % \centering
@@ -848,6 +869,11 @@ arithmetic mean of the data collected from 10 experiments.
 \caption{Test results for the first experiment}
 \label{flannel}
 \end{figure}
+
+In the Figure \ref{flannel} there are three applications application 1, 2 and 3. These applications are
+consists of identical containers created by different deployments to measure the effect of co-location.
+While applications 1 and 2 changes their instance counts on different tests application 3 stands as a
+control application to see if unrelated containers gets affected from the system load.
 
 It can be seen for all cases even a ordinary desktop computer can run high number of container
 instances.  Even over 100 instances latency increase is very low.  This suggests even this computer is
@@ -884,67 +910,92 @@ and 99th percentile values for this experiment.
 
 \begin{figure}
 \centering
-\includegraphics[]{g5_10_20.png}
+\includegraphics[]{setupa.png}
 \caption{Setup A results for the second experiment}
-\label{fig:g5_10_20}
+\label{fig:setupa}
 \end{figure}
 
 \begin{figure}
 \centering
-\includegraphics[]{ml_super_xl.png}
+\includegraphics[]{setupb.png}
 \caption{Setup B results for the second experiment}
-\label{fig:ml_super_xl}
+\label{fig:setupb}
 \end{figure}
 
-\begin{figure}
-\centering
-\includegraphics[]{multi.png}
-\caption{Setup C results for the second experiment}
-\label{fig:multi}
-\end{figure}
-
-Without use of percentile values, there seems to be a significant difference between setup A and
-setup B that suggests there is an huge overhead for using multiple containers. But percentile data
-clearly shows for 95 percent of the connections performed very similarly in these cases.
-But between 95th and 99th percentile deployments from setup A's performance decays more rapidly
-compared to those in setup B whose performance only starts to decay in slowest 1 percent of the
-connections.
-
-For setup A instance counts of the deployments are doubled in each case and for setup B resource
-limits of the deployments have been doubled.
-For setup A there is a clear decrease in latency from deployment 1 to 2. But when instance count
-increased again for deployment 3, performance subtlety worsened. Even thought
-the increase in latency was barely noticeable compared those in setup B.
-It is expected for instances in setup B's latency to decrease. It was assigned more resources while
-load stayed the same. But decrease in latency was significant from deployment 1 to 2, It was minimal
-for most connections from deployment 2 to 3 and only become noticeable in the slowest 5 percent of
-the connections.
+For setup A and B instance counts of the deployments are doubled in each configuration. For setup A
+there is a clear decrease in latency from configuration 1 to 2. But when instance count
+increased again from configuration 1 to 2 in setup B, performance subtlety worsened. Even thought
+the increase in latency was barely noticeable compared those in setup A.
 
 This shows that after a certain point the extra instances started to add more overhead and caused 
 latency to increase. it became clear that increasing the instance count wouldn't always improve
 the application performance. An optimal amount of instances has to be found for each application
 to achieve best performance.
 
-From setup C approach of experiments changes slightly. While comparing a single container
+\begin{figure}
+\centering
+\includegraphics[]{setupc.png}
+\caption{Setup C results for the second experiment}
+\label{fig:setupc}
+\end{figure}
+
+\begin{figure}
+\centering
+\includegraphics[]{setupd.png}
+\caption{Setup D results for the second experiment}
+\label{fig:setupd}
+\end{figure}
+
+For setup C and D single container instances that have equal computing power of their counterparts in
+setup A and B. Similar to previous setups, the resource limits are doubled for each configuration.
+It is expected for instances in setup C's latency to decrease. It was assigned more resources while
+load stayed the same. But decrease in latency was significant from configuration 1 to 2, It was minimal
+for most connections from deployment 1 to 2 in setup D and only become noticeable in the slowest 1
+percent of the connections.
+
+Without use of 95th percentile values, there seems to be a significant difference in latency between
+setup A and B versus
+setup C and D that suggests there is an huge overhead for using multiple containers. But percentile data
+clearly shows for 95 percent of the connections performed very similarly in these cases.
+But between 95th and 99th percentile deployments from setup A and B's performance decays more rapidly
+compared to those in setup C and D whose performance only starts to decay in slowest 1 percent of the
+connections.
+
+
+\begin{figure}
+\centering
+\includegraphics[]{setupe.png}
+\caption{Setup E results for the second experiment}
+\label{fig:setupe}
+\end{figure}
+
+\begin{figure}
+\centering
+\includegraphics[]{setupf.png}
+\caption{Setup F results for the second experiment}
+\label{fig:setupf}
+\end{figure}
+
+From setup E and F approach of experiments changes slightly. While comparing a single container
 with multiple containers can be useful in order to understand the amount of overhead. In actual use
 such a setup would be impractical. To mitigate that problem, a different series of experiment
 setups that includes a more evenly matched containers are introduced. Each setup contains one 
 deployment with more resources for each container and one container with more instances. The rate for
 extra resources and instances is always 2.
 
-While latency decreased for all cases from deployment 1a, 1b, 1c to 2a, 2b and 2c, latency increased
-or stayed similar from deployment 2a, 2b, 2c to 3a, 3b, 3c. This results from setup C also support
-s the observations from the previous experiments that after a saturation point adding more instances
-increases the overhead and therefore latency. This saturation point amounts to 2500m CPU resources
-for these setup. 
+While latency decreased for all cases from configuration 1a, 1b, 1c to 2a, 2b and 2c, in setup E 
+latency increased or stayed similar from configuration 1a, 1b, 1c to 2a, 2b, 2c in setup F. This
+results from setup  also supports the observations from the previous experiments that after a
+saturation point adding more instances increases the overhead and therefore latency. This saturation
+point amounts to 2500m CPU resources for these test cases. 
 
-The other important result from setup C is the significance of the balance between resource limits
-and instance counts. All the deployments in setup C has an equal amount of total resources but there
+The other important result from setup E and F is the significance of the balance between resource limits
+and instance counts. All the deployments in setup E and F has an equal amount of total resources but there
 is stark difference between their performance. With a correct configuration it's possible for multiple
-containers to achieve similar performances to their single container counterparts. While deployment 1b
-of setup C is seem to perform better than deployment 1 of setup B, it should be noted that the likely
-cause is the extra 250m resources the former has. But for deployment 2b of setup C and deployment 2
-of setup B. Albeit latter performs better, the overall performances is very similar.
+containers to achieve similar performances to their single container counterparts. While configuration 1b
+of setup E is seem to perform better than configuration 1 of setup C, it should be noted that the likely
+cause is the extra 250m resources the former has. But for configuration 2b of setup E and configuration 2
+of setup C. Albeit latter performs better, the overall performances is very similar.
 
 
 \chapter{Conclusion}
