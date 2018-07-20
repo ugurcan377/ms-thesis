@@ -118,10 +118,10 @@ hardware rather than specialized devices.  But most of the network appliances in
 propriety hardware.  There is a significant amount of work in the network function virtualization domain
 to actualize these network functions in a virtualized manner.  In this work we conducted a series of
 performance tests to evaluate the compatibility of modern container based virtualization solutions for
-NFV. To accomplish this, we implemented a generic service on top of a prevalent container orchestration
-software Kubernetes and assessed its performance with numerous clients. Our conclusion is that they are
-generally compatible except for some cases that may require certain specialized technologies to mature
-for reliable use.}
+NFV. To accomplish this, we implemented a generic service on top of the prevalent container orchestration
+software Kubernetes and assessed its performance with numerous clients. Our conclusion is while container
+performance varies with different parameters such as resource limits and instance counts, a well adjusted
+container setup is compatible to use with virtual network functions excluding some use cases. }
 
 %
 % Abstract in French
@@ -137,8 +137,9 @@ işlevi sanallaştırma çözümlerin yakın zamanda yaygınlaşmaya başlayan f
 teknolojisi olan işletim sistemi seviyesi sanallaştırma veya konteynır sanallaştırma ile uyumluluğunu
 değerlendirebilmek için bir takım testler yaptık. Bunun için önde gelen konteynır yönetim sistemlerinden
 Kubernetes üzerinde genel bir servis oluşturduk ve çeşitli miktarlarda istemciler kullanarak 
-performanslarını inceledik. Vardığımız sonuç bu teknolojilerin genel anlamda birbirleriyle uyumlu olduğu
-ancak bazı durumlar için gerekebilecek teknolojilerin olgunlaşması gerektiği yönünde oldu.
+performanslarını inceledik. Vardığımız sonuç konteynırlarin performansları kaynak limitleri ve konteynır
+sayısı gibi parametrelere göre değişse de iyi ayarlanmış bir konteynır sisteminin belli durumlar dışında
+ağ işlevleriyle kullanıma uygun olduğu yönünde oldu.
 }
 %
 % Acknowledgements
@@ -190,12 +191,12 @@ accounts to a huge increase in the network traffic while their earnings stayed s
 especially true for the
 telecom operators.  They are starting to experience unprecedented levels of mobile data usage and
 network traffic.  Statistics show that worldwide mobile device count and mobile Internet usage has 
-already surpassed desktop computers.  That's partially due to the advancements in processor and system
+already surpassed desktop computers.  This is partially due to the advancements in processor and system
 on chip technologies that enabled mobile devices to have computing power that rivals their desktop
 counterparts. 
 
-Since mobile Internet usage is only expected to grow further, it's clear that telecom operators need
-to improve their infrastructures.  But due to nature of their medium, telecom operators have specific
+Since mobile Internet usage is only expected to grow further, it is clear that telecom operators need
+to improve their infrastructures.  However, due to the nature of their medium, telecom operators have specific
 requirements and it would be very costly to increase the number of cell towers and base
 stations.  Operators and industry organizations, well aware of this fact, proposed a different
 architecture when designing the next generation (5G) mobile networks.  5G mobile networks are being
@@ -208,33 +209,30 @@ comprises the back bone of telecom networks \cite{abdelwahab_network_2016}.
 
 Looking at the design of 5G networks, it can be inferred that telecom operators and industry organizations
 have an intent to converge telecom and cloud infrastructures.  There is a recent trend among internet
-service companies to use a new and different way to design, develop, deploy and maintain
+service companies to use a new and different way to develop and maintain
 software for cloud infrastructures.  This method includes decoupling software into independent services
-also called  microservices and running them inside a more lightweight virtualization solution called
-containers.  This approach is often called a cloud native approach.
+also called microservices and running them inside a more lightweight virtualization solution called
+containers.  This approach is often called cloud native method for application development.
 
-% Tekrar daha detayli bir sekilde problemi acikla
-In this work we will try to examine the feasibility of combining network function virtualization with
-cloud native architecture using the prevalent container platform Kubernetes.
+In the effort of converging infrastructures, it would be useful to examine the new developments in the
+cloud computing domain. While this cloud native approach has clear operational and performance benefits
+in the cloud environments, telecom environments often have different use cases and requirements and
+it is not guaranteed that the same approaches will work in the different environments.
 
-\section{Thesis Outline}
-This thesis will follow the structure that is described below.
+Cloud infrastructures relies heavily on the virtualization technologies to provide on-demand computing
+resources. Standard hypervisor based virtualization uses a thick software layer to separate virtual
+machines from each other. Since this creates a considerable overhead, a new virtualization
+technology recently gained traction called container virtualization. This technology utilizes advanced
+kernel technologies to allow creation of virtual machines without the aforementioned seperation layer.
+This machines or containers can use computing resources far more effectively than their hypervisor
+counterparts at the cost of weaker isolation.
 
-Chapter 2 examines the literature about the current state of the research in this field. 
+In this work our goal would be trying to answer the questions ``Is network virtual functions
+compatible with container environments ?'' and ``Is it feasible to combine these two technologies ?''.
+In a more specific sense our main approach would be evaluating the performance of the container
+environments. Since one of the most important difference between telecom and cloud environments is the
+stricter performance requirements. 
 
-Chapter 3 presents an introduction on the network function virtualization domain.  The reference
-architecture, most of the works in the literature are based on and one of the implementations of this
-model will be explored.
-
-Chapter 4 presents the history and state of art of the container virtualization.  Two prominent
-technologies Docker and Kubernetes will be explained in a detailed manner.
-
-Chapter 5 describes the experimentation phase.  The experiment design and used methods will be explained
-alongside with the results of experiments.
-
-Chapter 6 presents the conclusion of this work and discusses the further research probabilities.
-
-\chapter{Literature Review}
 In our examination of the literature, we found out that previous works are mostly focused on
 implementation of virtual network functions with traditional virtualization.  Few works that implemented
 VNFs with operating system level virtualization were focused on different areas such as edge 
@@ -261,8 +259,29 @@ with using OpenFlow, OpenDayLight and Docker.  They also later expanded their wo
 in \cite{cziva_gnfc_2015} and edge computing in \cite{cziva_container_2017}.  Their work can be 
 considered as a solid proof of concept for using containers with network function virtualization.
 
+We will be examining features and capabilities of the prominent
+container orchestration software Kubernetes then we implement an generic function and test it's
+end to end network performance in a variety of different configurations. 
+
+
+\section[Thesis Outline]{1.1 Thesis Outline}
+This thesis will follow the structure that is described below.
+
+Chapter 2 presents an introduction on the network function virtualization domain.  The reference
+architecture, most of the works in the literature are based on and one of the implementations of this
+model will be explored.
+
+Chapter 3 presents the history and state of art of the container virtualization.  Two prominent
+technologies Docker and Kubernetes will be explained in a detailed manner.
+
+Chapter 4 describes the experimentation phase.  The experiment design and used methods will be explained
+alongside with the results of experiments.
+
+Chapter 5 presents the conclusion of this work and discusses the further research probabilities.
+
+
 \chapter{Network Function Virtualization}
-\section{Introduction}
+\section[Introduction]{2.1 Introduction}
 Computers networks are still complex and hard to manage.  This is mostly due to proprietary and tightly
 coupled nature of the most network devices.  Since these types network appliances rarely designed with
 interoperability in mind.  They often significantly increase the system complexity.  For simplifying
@@ -316,7 +335,7 @@ are independent technologies and they contribute different ideas to network rese
 technologies are used in a complementary way, computer networks can be utilized more effectively
 \cite{gray_network_2016}.
 
-\section{ETSI NFV}
+\section[ETSI NFV]{2.2 ETSI NFV}
 The reference model \cite{etsi_nfv} proposed by ETSI NFV industry standards group gained traction
 in both industry and
 research.  While it's not a de-facto standard for network function virtualization, there are many
@@ -330,12 +349,12 @@ infrastructures.
 \begin{figure}
 \centering
 \includegraphics[]{mano.png}
-\caption{ETSI NFV Architecture}
+\caption{ETSI NFV Architecture.}
 \label{fig:mano}
 \end{figure}
 
-\subsection{Architecture}
-\subsubsection{Network Function Virtualization Infrastructure (NFVI)}
+\subsection[Architecture]{2.2.1 Architecture}
+\subsubsection[Network Function Virtualization Infrastructure (NFVI)]{2.2.1.1 Network Function Virtualization Infrastructure (NFVI)}
 Network function virtualization infrastructure block of the ETSI NFV model that provides the necessary
 environment for virtual network functions.  It consists of three parts.  The first is the physical hardware
 that will provide the essential resources like processing power, storage and networking etc.  They are
@@ -344,24 +363,24 @@ virtual network functions to use underlying architecture.  As long it supports t
 points ETSI model doesn't require any specific virtualization solution.  The third one
 are the pooled virtual resources will then be exposed for the use of upper levels.
 
-\subsubsection{Virtualized Network Function (VNF)}
+\subsubsection[Virtualized Network Function (VNF)]{2.2.1.2 Virtualized Network Function (VNF)}
 A virtualized network function is a virtualization of the existing network functions that are often
 implemented as specialized hardware.  VNFs are expected to function identically compared to their non 
 virtualized counterparts.  It is not necessary for a single VNF to be implemented in a single virtual
 machine.  Implementation details may depend for the nature of the network function.
 
-\subsubsection{Element Management System (EMS)}
+\subsubsection[Element Management System (EMS)]{2.2.1.3 Element Management System (EMS)}
 Element management system is a functional block that will handle the management tasks for one or
 multiple VNFs.  This management tasks include fault management, accounting, configuration (could be 
 vendor specific configuration), security and performance evaluation.  The EMS may or may not collaborate
 with the virtual network function manager.
 
-\subsubsection{Operations Support System / Business Support System (OSS/BSS)}
+\subsubsection[Operations Support System / Business Support System (OSS/BSS)]{2.2.1.4 Operations Support System / Business Support System (OSS/BSS)}
 Operations Support System/Business Support System block is reserved for the network
 operators.  They can define any operation that are not explicitly described in the core
 ETSI architecture.  It is expected to share data with other function blocks.
 
-\subsubsection{Virtualized infrastructure manager (VIM)}
+\subsubsection[Virtualized infrastructure manager (VIM)]{2.2.1.5 Virtualized infrastructure manager (VIM)}
 Virtualized infrastructure manager block is responsible from the management of the network function
 virtualization infrastructure.  Mainly VIM has to orchestrate NFVI resources.  For this VIM has to make
 an inventory of system resource, keep track of what resources available at any time, know how currently
@@ -370,7 +389,7 @@ A NFV architecture can have multiple VIMs and there can be different VIMs for di
 the NFVI.  Openstack is a usual practical choice as virtualized infrastructure manager for the majority
 of the ETSI NFV implementations.
 
-\subsubsection{VNF Manager (VNFM)}
+\subsubsection[VNF Manager (VNFM)]{2.2.1.6 VNF Manager (VNFM)}
 VNF Manager block is the software that manages the life cycles of the virtual network functions.  Life
 cycle of a VNF includes instantiation (mostly from a template and template generally includes
 configuration information), modification, termination, monitoring, measuring performance metrics,
@@ -378,7 +397,7 @@ disaster recovery etc.  VNFM generally implements VNF life cycle as a set of gen
 be applied almost any VNF regardless of type and each VNF in the system is assigned to a VNFM.
 Likewise in VIM there is no limitation of how many VNFMs can exist together.
 
-\subsubsection{NFV Orchestrator (NFVO)}
+\subsubsection[NFV Orchestrator (NFVO)]{2.2.1.7 NFV Orchestrator (NFVO)}
 NFV Orchestrator is responsible for both orchestrating NFVI resources over multiple VIMs and managing
 network services' life cycle.  A network service is an abstraction for multiple virtual or physical
 network functions and any service chains or forwarding graphs that interconnects them.  A network
@@ -387,7 +406,7 @@ coordination the VNFM), modification, termination, monitoring, measuring perform
 recovery etc.  Other duties of an includes keeping a catalog of existing network services and virtual
 network functions, on-boarding new services, managing VNFMs etc \cite{gonzalez_dependability_2018}.
 
-\subsection{Implementation: Openstack Tacker}
+\subsection[Implementation: Openstack Tacker]{2.2.2 Implementation: Openstack Tacker}
 In NFV MANO implementations Openstack \cite{openstack} is one of the most commonly used VIMs.  To have
 a complete MANO
 solution Openstack started a NFVO-NFVM project called Tacker.  It's a spin-off of a Neutron project
@@ -414,7 +433,7 @@ this feat is by defining relations between these units.  An example TOSCA templa
 %\section{Service Function Chaining}
 
 \chapter{Container Virtualization}
-\section{Introduction}
+\section[Introduction]{3.1 Introduction}
 National Institute of Standards and Technology defines cloud computing as a model for enabling
 easy access to a pool of computing resources that requires minimal intervention from the service
 provider.  With cloud services, any person or organization can buy computing resources from providers
@@ -466,7 +485,7 @@ container project LXC \cite{lxc} was announced.  While it didn't see much adopte
 the basis
 for the most of the modern container technologies \cite{singh_containers_2016}.
 
-\section{Docker}
+\section[Docker]{3.2 Docker}
 Docker is a container virtualization technology \cite{docker} that is developed in 2013 by a software
 company called
 dotCloud.  Among the modern container technologies Docker is the most widely used one and it would also
@@ -495,7 +514,7 @@ individual components of applications are easier compared to managing a monolith
 all of its components runs in same environment and problems in one component can affect the whole
 application.
 
-\subsection{Docker Images}
+\subsection[Docker Images]{3.2.1 Docker Images}
 As mentioned before packaging the applications and dependencies together is one of the core ideas
 behind Docker.  This is achieved by using the Docker images.  Contrary to virtual machines where user
 has to install a new operating system on a clean virtual disk or use pre-installed disk image.  Docker 
@@ -523,7 +542,7 @@ write data to their disks would be unusable a writable layer is added when a con
 layer would be deleted when the container is removed until it's saved as a version of the image.
 While Docker can use different union file systems, by default AUFS is used.
 
-\subsection{Docker Architecture}
+\subsection[Docker Architecture]{3.2.2 Docker Architecture}
 Docker uses a rather simple server-client architecture for the creation and management of the
 containers.  The main components can be summarized as the Docker engine, the component that manages
 images and containers, Docker client, the component that users and administrators can send their
@@ -555,11 +574,11 @@ Current state of Docker architecture can be seen at the Figure \ref{fig:dockerar
 \begin{figure}
 \centering
 \includegraphics[]{docker-arch.png}
-\caption{Docker Architecture}
+\caption{Docker Architecture.}
 \label{fig:dockerarch}
 \end{figure}
 
-\section{Kubernetes}
+\section[Kubernetes]{3.3 Kubernetes}
 The one of most important topics about operating cloud environments is the question of scale.  In a
 practical case it would be expected to run numerous amounts of containers in many hosts. Since
 cloud systems has to run with minimum human intervention, the obvious problem would be coordination
@@ -578,7 +597,7 @@ It can be installed into physical servers, local virtual machines or public clou
 Docker now has it's own integrated container orchestration solution called Docker Swarm 
 \cite{docker_swarm}, Kubernetes stays as the most widely used container orchestration software.
 
-\subsection{Kubernetes Architecture}
+\subsection[Kubernetes Architecture]{3.3.1 Kubernetes Architecture}
 Kubernetes implements a typical master slave architecture.  These are named as master nodes and worker
 nodes.  Nodes are only separated among themselves by which Kubernetes components they run and each role 
 has to run a required set of components.  For master nodes the required components are API server, etcd,
@@ -589,7 +608,7 @@ of Kubernetes architecture can be seen at Figure \ref{fig:k8sarch}
 \begin{figure}
 \centering
 \includegraphics[]{k8s-arch.png}
-\caption{Kubernetes Architecture \cite{kube_arch}}
+\caption{Kubernetes Architecture \cite{kube_arch}.}
 \label{fig:k8sarch}
 \end{figure}
 
@@ -616,7 +635,7 @@ introduced with Kubernetes version 1.5 there is some implementations using CRI s
 tries make Kubernetes compatible with Open Container Initiative runtimes and Rktlet a CRI
 implementation of the CoreOS runtime rkt \cite{rkt}.
 
-\subsection{Workloads}
+\subsection[Workloads]{3.3.2 Workloads}
 For creating or accessing Kubernetes resources a developer first has to select an API client to work
 with.  It can be the web interface, one of the programming language clients or the kubectl command line
 interface.  Then they would need a definition of the resource or resources they want to create as an
@@ -677,7 +696,7 @@ Kubernetes project itself also provides an nginx based controller in their Githu
 %\subsection{Networking}
 
 \chapter{Experimentation}
-\section{Setup}
+\section[Setup]{4.1 Setup}
 This section will explain the test environments that all the experimentations will run on.  While this
 setup has many components, all the software components are selected from available free and open source
 tools.
@@ -692,47 +711,48 @@ The hardware used in this setup is a desktop computer.  It's specifications are 
 
 One of most essential parts of this setup would be a cloud platform that can run and manage containers.
 We chose the Kubernetes container orchestration software as a cloud platform after considering it's
-features, widespread adoption and maturity.  As of yet there is no standard way to build a Kubernetes
+features, widespread adoption and maturity.  As of yet, there is no standard way to build a Kubernetes
 cluster.  Considering manually installing Kubernetes to each node would be unrealistic at scale, there
 are several installation tools that can be selected to build a Kubernetes cluster.
 
-While minikube is one of the easiest to installation tool available, it's created for development and
-testing purposes.  It's method of creating a single node
-cluster inside of a virtual machine would makes it unsuitable for mimicking real world clusters.  Another
-tool for building clusters is kubeadm which is developed by the Kubernetes team.  Although it's currently
-on beta, it allows easy installation among multiple nodes regardless of type. Kubeadm also leaves the
-network setup to the administrator's choice via the CNI.  Thus allowing them to experiment with different
+While minikube is one of the easiest to installation tool available, it is actually created for 
+development and testing purposes.  Minikube's method of creating a single node
+cluster inside of a virtual machine makes it unsuitable for mimicking real world clusters.  Another
+tool for building clusters is kubeadm which is developed by the Kubernetes team.  Although kubeadm currently
+is at beta stage, it allows easy installation among multiple nodes regardless of type. Kubeadm also leaves the
+network setup to the administrator's choice via the CNI, thus allowing to experiment with different
 network configurations. We selected kubeadm as the 
-installation tool for our work.  Installing kubeadm inside of Docker containers instead of virtual
-machines we built a three machine Kubernetes cluster with one master and two nodes.  This pattern of 
-installing another Docker daemon inside of a container is often called dind or Docker in Docker.
+installation tool for our work.  We installed kubeadm inside of Docker containers instead of virtual
+machines.  This is a pattern often called dind or Docker in Docker which consists of installing
+another Docker daemon inside of a container. Then we built a three machine test cluster using Kubernetes with one
+master and two nodes.
 
 For monitoring the cluster state and container performance, an external tool is needed.  As a monitoring
-tool we chose Prometheus a modern pull based monitoring that is developed by the same non-profit 
-organization who also develops Kubernetes itself. It can also receive metrics from other applications
+tool, we chose Prometheus which is a modern pull based monitoring software that is developed by the same
+non-profit 
+organization that developed Kubernetes itself. Prometheus can also receive metrics from other applications
 via extensions called exporters. Prometheus can be easily installed using the prometheus-operator.
 Operators are special types of resources in Kubernetes.  Each operator has a set of custom defined
 workloads for managing that application. Operator pattern is preferred for automating applications that
-requires specific operational know-how to manage.  This kinds of applications are often stateful such as
-databases, monitoring tools etc.
+requires specific operational know-how to manage.  These kinds of applications are often stateful in
+operation such as databases, monitoring tools etc.
 
-\section{Experiment Design}
-We designed a few experiments for measuring end to end performance on Kubernetes using several different
-setups.
+\section[Experiment Design]{4.2 Experiment Design}
+We designed a set of experiments for measuring end to end network performance on Kubernetes using several
+different setups.
 
-As we mentioned before contrary to virtual machines, if they are not constrained containers have full
+Contrary to virtual machines, containers have full
 access to host machines computing resources and in a typical cloud environment we can assume that
-containers will always run with constrained resources.  Because of that will also constrain our
-containers' resources.  Until otherwise stated each pod will be constrained to a tenth of a CPU core
-for the first experiment and a quarter of a CPU core for the second experiment.
+containers will always run in constrained mode.  Therefore, to mimic real world operation, in all our
+experiments  the container pods are constrained in CPU power, ranging from a tenth to a quarter of a CPU.
 
-The test application will be nginx. While commonly known as a web server, it's often used in network
-functions such as load balancer and reverse proxy. We think it will representative for a simple network
-function.  It will be deployed to the cluster via Kubernetes
-deployments using a custom Docker image.To use in the tests we also  prepared a Docker image with a
+As a representative  network function, nginx is used in the experiments. Although commonly known as a
+web server, it is often used in network
+functions such as load balancer and reverse proxy.  Nginx is deployed to the cluster via Kubernetes
+deployments using a custom Docker image.To use in the tests, we also  prepared a Docker image with a
 modified web server to be able send usage metrics to Prometheus.  This Docker image contains a nginx
 version 1.12.2 compiled with nginx-vts module. Kubernetes deployments are ideal deployment tools for
-this case  because they can create and maintain a specified number of instances for an application and
+our case since they can create and maintain a specified number of instances for an application and
 they also can easily be scaled horizontally.  All containers inside a deployment will be exposed 
 through a single endpoint using Kubernetes NodePort services. An example representation of the experiment
 setup can be seen in Figure \ref{fig:experiment}
@@ -740,13 +760,13 @@ setup can be seen in Figure \ref{fig:experiment}
 \begin{figure}
 \centering
 \includegraphics[]{experiment.png}
-\caption{A representation of the experiment setup}
+\caption{A representation of the experiment setup.}
 \label{fig:experiment}
 \end{figure}
 
-For the first experiment we will create 3 separate deployments and for varying number of
-instances in each deployment we will run series of tests simulating network traffic.  For simulating
-network traffic a HTTP load testing tool bombardier will be used.  It's a command line tool written in
+For the first experiment, we create three separate deployments and for a varying number of
+instances in each deployment we run a series of tests generating a pre-determined amount of network load.
+For load generation a HTTP load testing tool bombardier is used.  It's a command line tool written in
 Go programming language and it can save results in JSON format for easier further processing. 
 
 Our methodology for running the tests for the first experiment will be the following.  
@@ -799,26 +819,30 @@ Application 1 & Application 2 & Application 3 \\
 \label{instable}
 \end{table}
 
-The main motivation for selecting such an instance distribution can be explained with a few reasons.
-First it will be desirable to learn how co-locating containers are affected if other containers sharing
-the same host starts to experience heavy load.  Second if multiple different services experience heavy
-load how does this affect each other and other containers on the host.  For this reasons we designed a
-scheme that always have a control application that has a static instance count and instance counts of 
-the other one or two application changes constantly.
+The main motivation for selecting such an instance distribution can be explained with a number of reasons.
+First, it will be desirable to learn how co-locating containers are affected if other containers sharing
+the same host starts to experience heavy load.  Second, we would like to find out the affect of multiple
+different services experiencing heavy load on each other and on other containers within the host.  For
+these reasons, we included a control application in all the schemes which always has the same amount of
+instances. By utilizing another application we observed how other applications are affected from the system
+load and total number of containers in a node.
+
 
 The difference between microservices and monolithic applications is considered essential in both Docker
-and Kubernetes. For figuring out how this impacts the performance of applications we designed a second
-experiment. In this second experiment we compared two deployments with equal amount resources. One with
-a single container and other with a number of instances. While this isn't representative of real world
-microservice, it will be useful for measuring the overhead from using multiple containers.
+and Kubernetes. For figuring out how this impacts the performance of applications, we designed a second 
+set of experiments. In this second setup we compared two deployments with equal amount of resources. One with
+a single container and other with a number of instances. While this does not realisticly represent the
+real world
+microservice behavior, it will be useful for measuring the overhead coming from using multiple containers.
 
-There are few changes at the methodology for this experiment. Since instance counts for this experiment
-is static. This allows for more variety in testing parameters. Concurrent connection count will differ
-from 100 connections to 2000 connections with increments of 50. Since connection count is the more
-important variable we will use static durations of 2 minutes compared to request counts. This will 
-allow more accuracy and predictable testing durations. For this experiment we will use another go based
-open source load testing tool called vegeta for getting percentile metrics.Testing parameters for second
-experiment can be found in Table \ref{secondexp}. CPU limits are expressed as a Kubernetes resource unit
+There are certain changes at the methodology for this experiment. Since, instance counts for this experiment
+is static, it allows for more variety in testing parameters. Concurrent connection count varies
+from 100 connections to 2000 connections with increments of 50. Since connection count is proved to be the more
+important variable from the first experiment we will use static duration of 2 minutes instead of total request
+counts for this experiment. This will 
+allow for accurate and predictable testing durations. For this experiment, we use another go based
+open source load testing tool called vegeta for getting percentile metrics.Testing parameters for the second
+experiment can be found in Table \ref{secondexp}. CPU limits are expressed as the Kubernetes resource unit
 called milicores or milicpu that is equal to a thousandth of a CPU core. CPU limits are enforced by not
 letting a container use more CPU time than it's CPU limit as milicores * 100 in 100 miliseconds.
 
@@ -844,10 +868,10 @@ Setup D &  1 * 2500m &   1 * 5000m \\ \hline
 \label{secondexp}
 \end{table}
 
-\section{Results}
-We executed the test set described above on Kubernetes cluster that is defined in the setup section
-The experiment setup was run by automated scripts 10 times.  The results were then plotted using the
-arithmetic mean of the data collected from 10 experiments. 
+\section[Results]{4.3 Results}
+We executed the test set described above on Kubernetes cluster that is defined in the setup section.
+The experiment setup was run by automated scripts with 10 repetitions.  The results were then plotted
+using the arithmetic mean of the data collected from 10 experiments. 
 
 % \begin{figure}
 % \centering
@@ -866,27 +890,27 @@ arithmetic mean of the data collected from 10 experiments.
 \begin{figure}
 \centering
 \includegraphics[]{flannel.png}
-\caption{Test results for the first experiment}
+\caption{Test results for the first experiment.}
 \label{flannel}
 \end{figure}
 
-In the Figure \ref{flannel} there are three applications application 1, 2 and 3. These applications are
-consists of identical containers created by different deployments to measure the effect of co-location.
-While applications 1 and 2 changes their instance counts on different tests application 3 stands as a
-control application to see if unrelated containers gets affected from the system load.
+In the Figure \ref{flannel} there are three applications consist of identical containers
+created by different deployments to measure the effect of co-location.
+While applications 1 and 2 change their instance counts on different tests, application 3 stands as a
+control application to see if unrelated containers get affected from the overall system load.
 
-It can be seen for all cases even a ordinary desktop computer can run high number of container
-instances.  Even over 100 instances latency increase is very low.  This suggests even this computer is
-capable of running a higher number of containers.  High latency at the initial step is expected 
-because only one container instance with constrained resources trying to respond to all of the requests.
-But when
-the instance count is increased latency improves linearly and upon reaching a point latency improvement
-is flattened.  There is slight increase at the final step because of the load increase of the host.
+It can be seen for all cases containers are very effective for utilizing system resources. Even a dated desktop
+computer can run high number of container instances.  Running more than 100 instances affected the latency minimally.
+High latency at the initial step is expected because only one container instance with constrained resources
+is trying to respond to all of the requests.
+However, when the instance count is increased, latency improves linearly and after a certain point saturates.
+There is slight increase at the final step because of the load increase of the host.
 
-While the latency of each application increases greatly when both application experiences load this can
-only be observed on the step two and not other steps.  We can infer this is only caused by the lower
-instance counts rather than any problems about co-location.  Latency of the control application doesn't
-seem to affected from the other applications' load, this fulfills one of important requirements for
+While the latency of each application increases considerably when both applications experience load this
+can
+only be observed on the step two and not other steps.  We can infer that this is only caused by the lower
+instance counts rather than any problems about the co-location.  Latency of the control application does not
+seem to get affected from the other applications' load, this fulfills one of important requirements for
 network function virtualization.
 
 Single instances were affected greatly from the changes in number of concurrent connections and total
@@ -911,14 +935,14 @@ and 99th percentile values for this experiment.
 \begin{figure}
 \centering
 \includegraphics[]{setupa.png}
-\caption{Setup A results for the second experiment}
+\caption{Setup A results for the second experiment.}
 \label{fig:setupa}
 \end{figure}
 
 \begin{figure}
 \centering
 \includegraphics[]{setupb.png}
-\caption{Setup B results for the second experiment}
+\caption{Setup B results for the second experiment.}
 \label{fig:setupb}
 \end{figure}
 
@@ -935,14 +959,14 @@ to achieve best performance.
 \begin{figure}
 \centering
 \includegraphics[]{setupc.png}
-\caption{Setup C results for the second experiment}
+\caption{Setup C results for the second experiment.}
 \label{fig:setupc}
 \end{figure}
 
 \begin{figure}
 \centering
 \includegraphics[]{setupd.png}
-\caption{Setup D results for the second experiment}
+\caption{Setup D results for the second experiment.}
 \label{fig:setupd}
 \end{figure}
 
@@ -965,14 +989,14 @@ connections.
 \begin{figure}
 \centering
 \includegraphics[]{setupe.png}
-\caption{Setup E results for the second experiment}
+\caption{Setup E results for the second experiment.}
 \label{fig:setupe}
 \end{figure}
 
 \begin{figure}
 \centering
 \includegraphics[]{setupf.png}
-\caption{Setup F results for the second experiment}
+\caption{Setup F results for the second experiment.}
 \label{fig:setupf}
 \end{figure}
 
@@ -999,11 +1023,11 @@ of setup C. Albeit latter performs better, the overall performances is very simi
 
 
 \chapter{Conclusion}
-Virtualization is one of essential technologies behind modern computing infrastructure.  In this work we
-tried to examine to feasibility of combining two active subdomains of virtualization field.  Network
+Virtualization is one of the essential technologies behind modern computing infrastructure.  In this work, we
+tried to examine the feasibility of combining two active subdomains of virtualization field:  Network
 function virtualization and container based virtualization.
 
-At first we examined current systems for network function virtualization and tried to determine what
+At first, we examined current systems for network function virtualization and tried to determine what
 technologies are required to implement network functions, which architectures are preferred when
 building systems to run network functions etc. Then we examined current container technologies and
 tried to understand their capabilities, if there are alternatives or counterparts to technologies that
@@ -1011,20 +1035,22 @@ are required by virtual network functions.
 
 We built a container testbed with Kubernetes for testing how containers perform under load and can they
 adhere to often strict requirements for network functions.  Our preliminary results show that even for
-a very small percent of results there is significant variance in latency. This may not acceptable for some
-network functions. As a solution for this problme specialized high speed networking software may be needed.
-Our conclusion was as is standard container clusters can not be used for implementing virtual network
-functions without making use of the cloud native approach these systems were made to utilize. But since
+a very small percent of results there is significant variance in latency. This may not be acceptable for
+the network functions with latency constraints.. As a solution for this observed problem specialized
+high speed networking software may be needed.
+Our conclusion was as is standard container clusters can be used for implementing virtual network
+functions. But with using containers it should noted that these systems were made to utilize a specific
+cloud native approach in designing the software. Since
 this requires a system redesign for the most of the network services it can not be recommended for each
 case to use container based systems.
 
-Fundamental technologies that can used be for implementing virtual network functions in
+Fundamental technologies that can be used for implementing virtual network functions in
 container environments are present.  Considering there are still no out of box solutions and the existing
 solutions are still immature and hard to install and use.  We believe there are promising developments
 achieve network
-function virtualization in containers.  And in the future more practical solutions will be developed.
+function virtualization in containers.  In the future more practical solutions will be developed.
 
-\section{Limitations and Future Work}
+\section[Limitations and Future Work]{5.1 Limitations and Future Work}
 One of the main limitations of this work was the limited computing resources.  Our testbeds was 
 built into a common desktop computer.  Which had very few resources compared to a common cloud
 environment and this made it very hard to design a realistic system and limited the scale of our
